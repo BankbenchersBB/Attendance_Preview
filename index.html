@@ -1,0 +1,1922 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BankBenchers — Attendance Dashboard</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      /* ── LIGHT THEME (default) ─────────────────────── */
+      :root,
+      [data-theme="light"] {
+        --bg: #f0f4ff;
+        --bg2: #ffffff;
+        --bg3: #e8eef8;
+        --card: #ffffff;
+        --card2: #f5f8ff;
+        --border: rgba(26, 33, 81, 0.08);
+        --border2: rgba(26, 33, 81, 0.15);
+        --text: #1a2151;
+        --text2: #3d4a7a;
+        --muted: #8892b0;
+        --accent: #1a2151;
+        --accent2: #4f6fe8;
+        --green: #00c48c;
+        --green-bg: #e6fbf5;
+        --orange: #f5a623;
+        --orange-bg: #fff4e0;
+        --red: #ff4d4d;
+        --red-bg: #ffe8e8;
+        --purple: #7b2ff7;
+        --purple-bg: #f0e6ff;
+        --cyan: #0099cc;
+        --cyan-bg: #e0f5ff;
+        --late-clr: #b8cc00;
+        --late-bg: #f7ffb8;
+        --shadow: 0 2px 16px rgba(26, 33, 81, 0.08);
+        --shadow-lg: 0 8px 32px rgba(26, 33, 81, 0.14);
+        --radius: 16px;
+        --radius-sm: 10px;
+        --navbar-bg: #1a2151;
+        --navbar-text: #ffffff;
+      }
+
+      /* ── DARK THEME ────────────────────────────────── */
+      [data-theme="dark"] {
+        --bg: #0a0e1a;
+        --bg2: #0f1525;
+        --bg3: #141b30;
+        --card: #161d32;
+        --card2: #1c2540;
+        --border: rgba(255, 255, 255, 0.07);
+        --border2: rgba(255, 255, 255, 0.12);
+        --text: #e8eaf6;
+        --text2: #b0bcd8;
+        --muted: #8892b0;
+        --accent: #4f8ef7;
+        --accent2: #7c3aed;
+        --green: #10b981;
+        --green-bg: rgba(16, 185, 129, 0.12);
+        --orange: #f59e0b;
+        --orange-bg: rgba(245, 158, 11, 0.12);
+        --red: #ef4444;
+        --red-bg: rgba(239, 68, 68, 0.12);
+        --purple: #a855f7;
+        --purple-bg: rgba(168, 85, 247, 0.12);
+        --cyan: #06b6d4;
+        --cyan-bg: rgba(6, 182, 212, 0.12);
+        --late-clr: #c8e000;
+        --late-bg: rgba(200, 224, 0, 0.12);
+        --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+        --shadow-lg: 0 8px 48px rgba(0, 0, 0, 0.6);
+        --navbar-bg: #0a0e1a;
+        --navbar-text: #e8eaf6;
+      }
+
+      /* ── Base ───────────────────────────────────────── */
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        overflow-x: hidden;
+        transition:
+          background 0.3s,
+          color 0.3s;
+      }
+
+      /* ── Navbar ─────────────────────────────────────── */
+      .navbar {
+        background: var(--navbar-bg) !important;
+        border-bottom: 1px solid var(--border);
+        padding: 12px 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: var(--shadow);
+        transition: background 0.3s;
+      }
+
+      .navbar-brand {
+        font-weight: 800;
+        font-size: 1.15rem;
+        letter-spacing: -0.3px;
+        color: #ffffff !important;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+
+      .brand-icon {
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.15);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .brand-sub {
+        font-size: 0.62rem;
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.6);
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+        display: block;
+        line-height: 1;
+      }
+
+      /* ── Theme Toggle ───────────────────────────────── */
+      .theme-toggle {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 50px;
+        padding: 5px 12px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        cursor: pointer;
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.85);
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+
+      .theme-toggle:hover {
+        background: rgba(255, 255, 255, 0.18);
+        color: #fff;
+      }
+
+      .theme-toggle i {
+        font-size: 0.9rem;
+      }
+
+      /* Live chip */
+      .chip-live {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: rgba(0, 196, 140, 0.15);
+        border: 1px solid rgba(0, 196, 140, 0.3);
+        color: #00c48c;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.72rem;
+        font-weight: 700;
+      }
+
+      /* ── Loading ────────────────────────────────────── */
+      #loadingScreen {
+        position: fixed;
+        inset: 0;
+        background: var(--bg);
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        transition: background 0.3s;
+      }
+
+      .loader-ring {
+        width: 48px;
+        height: 48px;
+        border: 3px solid var(--border2);
+        border-top-color: var(--accent2);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .loader-text {
+        font-size: 0.8rem;
+        color: var(--muted);
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          opacity: 0.4;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+
+      /* ── Main ───────────────────────────────────────── */
+      .main-wrap {
+        padding: 24px 16px 60px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .page-title {
+        font-size: clamp(1.3rem, 4vw, 1.8rem);
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: var(--text);
+        line-height: 1.2;
+      }
+
+      .page-subtitle {
+        font-size: 0.82rem;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      /* ── Filter Card ────────────────────────────────── */
+      .filter-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow);
+      }
+
+      .filter-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        color: var(--muted);
+        margin-bottom: 7px;
+        display: block;
+      }
+
+      .form-select,
+      .form-control {
+        background: var(--bg) !important;
+        border: 1.5px solid var(--border2) !important;
+        color: var(--text) !important;
+        border-radius: var(--radius-sm) !important;
+        font-size: 0.88rem !important;
+        padding: 10px 14px !important;
+        font-weight: 500 !important;
+        transition: all 0.2s;
+      }
+
+      .form-select:focus,
+      .form-control:focus {
+        border-color: var(--accent2) !important;
+        box-shadow: 0 0 0 3px rgba(79, 111, 232, 0.12) !important;
+        outline: none !important;
+      }
+
+      .form-select option {
+        background: var(--card);
+        color: var(--text);
+      }
+
+      /* ── Stat Cards ─────────────────────────────────── */
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        margin-bottom: 22px;
+      }
+
+      @media (min-width: 768px) {
+        .stats-grid {
+          grid-template-columns: repeat(4, 1fr);
+        }
+      }
+
+      .stat-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 18px 16px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.2s,
+          box-shadow 0.2s,
+          background 0.3s;
+        cursor: default;
+      }
+
+      .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-lg);
+      }
+
+      .stat-card::after {
+        content: "";
+        position: absolute;
+        bottom: -20px;
+        right: -20px;
+        width: 80px;
+        height: 80px;
+        border-radius: 50%;
+        opacity: 0.06;
+      }
+
+      .stat-card.present::after {
+        background: var(--green);
+      }
+      .stat-card.absent::after {
+        background: var(--red);
+      }
+      .stat-card.halfday::after {
+        background: var(--purple);
+      }
+      .stat-card.latehours::after {
+        background: var(--cyan);
+      }
+
+      .stat-card::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        border-radius: var(--radius) var(--radius) 0 0;
+      }
+
+      .stat-card.present::before {
+        background: var(--green);
+      }
+      .stat-card.absent::before {
+        background: var(--red);
+      }
+      .stat-card.halfday::before {
+        background: var(--purple);
+      }
+      .stat-card.latehours::before {
+        background: var(--cyan);
+      }
+
+      .stat-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.15rem;
+        margin-bottom: 14px;
+      }
+
+      .stat-card.present .stat-icon {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+      .stat-card.absent .stat-icon {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+      .stat-card.halfday .stat-icon {
+        background: var(--purple-bg);
+        color: var(--purple);
+      }
+      .stat-card.latehours .stat-icon {
+        background: var(--cyan-bg);
+        color: var(--cyan);
+      }
+
+      .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        letter-spacing: -1px;
+        line-height: 1;
+        font-family: "JetBrains Mono", monospace;
+      }
+
+      .stat-card.present .stat-value {
+        color: var(--green);
+      }
+      .stat-card.absent .stat-value {
+        color: var(--red);
+      }
+      .stat-card.halfday .stat-value {
+        color: var(--purple);
+      }
+      .stat-card.latehours .stat-value {
+        color: var(--cyan);
+        font-size: 1.3rem;
+        letter-spacing: -0.5px;
+      }
+
+      .stat-label {
+        font-size: 0.72rem;
+        color: var(--muted);
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 5px;
+      }
+
+      /* ── Section Header ─────────────────────────────── */
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 14px;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .section-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .section-title .dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--accent2);
+        box-shadow: 0 0 0 3px rgba(79, 111, 232, 0.15);
+      }
+
+      .records-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        color: var(--text2);
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+      }
+
+      /* ══════════════════════════════════════════════════
+         DESKTOP TABLE
+      ══════════════════════════════════════════════════ */
+      .table-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+        margin-bottom: 24px;
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+      }
+
+      .logs-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.83rem;
+      }
+
+      .logs-table thead th {
+        background: var(--bg3);
+        color: var(--muted);
+        font-size: 0.68rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.2px;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+      }
+
+      .logs-table tbody tr {
+        border-bottom: 1px solid var(--border);
+        transition: background 0.15s;
+      }
+
+      .logs-table tbody tr:hover {
+        background: var(--bg3);
+      }
+      .logs-table tbody tr:last-child {
+        border-bottom: none;
+      }
+
+      .logs-table tbody td {
+        padding: 12px 16px;
+        color: var(--text);
+        white-space: nowrap;
+        font-family: "JetBrains Mono", monospace;
+        font-size: 0.8rem;
+      }
+
+      .logs-table tbody td.emp-name {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: var(--text);
+      }
+
+      /* ── Show/Hide desktop vs mobile ──────────────────── */
+      .desktop-table {
+        display: block;
+      }
+      .mobile-cards {
+        display: none;
+      }
+
+      @media (max-width: 767px) {
+        .desktop-table {
+          display: none;
+        }
+        .mobile-cards {
+          display: block;
+        }
+      }
+
+      /* ══════════════════════════════════════════════════
+         MOBILE CARDS
+      ══════════════════════════════════════════════════ */
+      .attendance-cards {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 24px;
+      }
+
+      .att-card {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 14px 16px;
+        box-shadow: var(--shadow);
+        transition:
+          background 0.3s,
+          box-shadow 0.2s;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .att-card::before {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: var(--radius) 0 0 var(--radius);
+      }
+
+      .att-card.status-p ::before,
+      .att-card.status-p::before {
+        background: var(--green);
+      }
+      .att-card.status-hd::before {
+        background: var(--purple);
+      }
+      .att-card.status-a::before {
+        background: var(--red);
+      }
+
+      /* Card Header Row */
+      .att-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+
+      .att-card-emp {
+        font-weight: 700;
+        font-size: 0.9rem;
+        color: var(--text);
+      }
+
+      .att-card-date {
+        font-size: 0.75rem;
+        color: var(--muted);
+        font-family: "JetBrains Mono", monospace;
+        background: var(--bg3);
+        padding: 3px 8px;
+        border-radius: 6px;
+        border: 1px solid var(--border);
+      }
+
+      /* Card Body — 3 columns: Punch In | Punch Out | Hours */
+      .att-card-times {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 8px;
+        margin-bottom: 10px;
+        background: var(--bg3);
+        border-radius: 10px;
+        padding: 10px 12px;
+        border: 1px solid var(--border);
+      }
+
+      .att-time-item {
+      }
+
+      .att-time-label {
+        font-size: 0.62rem;
+        color: var(--muted);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 2px;
+      }
+
+      .att-time-value {
+        font-size: 0.82rem;
+        color: var(--text);
+        font-family: "JetBrains Mono", monospace;
+        font-weight: 600;
+      }
+
+      /* Card Footer Row */
+      .att-card-footer {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .att-footer-left {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      /* Late By chip on card */
+      .late-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 3px 9px;
+        border-radius: 8px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        font-family: "JetBrains Mono", monospace;
+      }
+      .late-chip i {
+        background: transparent !important;
+      }
+      .late-chip i,
+      .btn-edit i,
+      .badge-status i {
+        background: transparent !important;
+        line-height: 1 !important;
+      }
+
+      .late-chip.late-zero {
+        background: var(--green-bg);
+        color: var(--green);
+      }
+      .late-chip.late-low {
+        background: var(--late-bg);
+        color: #7a8800;
+      }
+      .late-chip.late-high {
+        background: var(--red-bg);
+        color: var(--red);
+      }
+
+      /* ── Status Badges ──────────────────────────────── */
+      .badge-status {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 11px;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.3px;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        white-space: nowrap;
+      }
+
+      .badge-p {
+        background: var(--green-bg);
+        color: var(--green);
+        border: 1px solid rgba(0, 196, 140, 0.25);
+      }
+      .badge-hd {
+        background: var(--purple-bg);
+        color: var(--purple);
+        border: 1px solid rgba(123, 47, 247, 0.25);
+      }
+      .badge-a {
+        background: var(--red-bg);
+        color: var(--red);
+        border: 1px solid rgba(255, 77, 77, 0.25);
+      }
+
+      /* Late colors in table */
+      .late-zero {
+        color: var(--green);
+      }
+      .late-low {
+        color: #7a8800;
+      }
+      .late-high {
+        color: var(--red);
+      }
+
+      /* ── Buttons ────────────────────────────────────── */
+      .btn-edit {
+        background: var(--bg3);
+        border: 1px solid var(--border2);
+        color: var(--text2);
+        padding: 5px 12px;
+        border-radius: var(--radius-sm);
+        font-size: 0.72rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        white-space: nowrap;
+      }
+
+      .btn-edit:hover {
+        background: rgba(79, 142, 247, 0.1);
+        border-color: var(--accent2);
+        color: #fff;
+      }
+
+      .btn-primary-custom {
+        background: var(--accent);
+        border: none;
+        color: #fff;
+        padding: 11px 24px;
+        border-radius: var(--radius-sm);
+        font-weight: 700;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 4px 14px rgba(26, 33, 81, 0.2);
+      }
+
+      .btn-primary-custom:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+      .btn-primary-custom:active {
+        transform: translateY(0);
+      }
+
+      .btn-outline-custom {
+        background: transparent;
+        border: 1.5px solid var(--border2);
+        color: var(--text2);
+        padding: 11px 24px;
+        border-radius: var(--radius-sm);
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .btn-outline-custom:hover {
+        border-color: var(--text);
+        color: var(--text);
+      }
+
+      /* ── Modal ──────────────────────────────────────── */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(26, 33, 81, 0.5);
+        backdrop-filter: blur(8px);
+        z-index: 2000;
+        display: none;
+        align-items: flex-end;
+        justify-content: center;
+        padding: 0;
+      }
+
+      [data-theme="dark"] .modal-overlay {
+        background: rgba(0, 0, 0, 0.75);
+      }
+
+      @media (min-width: 576px) {
+        .modal-overlay {
+          align-items: center;
+          padding: 20px;
+        }
+      }
+
+      .modal-overlay.active {
+        display: flex;
+        animation: fadeIn 0.2s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      .modal-box {
+        background: var(--card);
+        border: 1px solid var(--border2);
+        border-radius: var(--radius) var(--radius) 0 0;
+        width: 100%;
+        max-width: 520px;
+        max-height: 90vh;
+        overflow-y: auto;
+        animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        box-shadow: var(--shadow-lg);
+      }
+
+      @media (min-width: 576px) {
+        .modal-box {
+          border-radius: var(--radius);
+          animation: scaleIn 0.25s ease;
+        }
+      }
+
+      @keyframes slideUp {
+        from {
+          transform: translateY(100%);
+        }
+        to {
+          transform: translateY(0);
+        }
+      }
+      @keyframes scaleIn {
+        from {
+          transform: scale(0.95);
+          opacity: 0;
+        }
+        to {
+          transform: scale(1);
+          opacity: 1;
+        }
+      }
+
+      .modal-header-custom {
+        padding: 20px 20px 0;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .modal-title-custom {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: var(--text);
+      }
+      .modal-subtitle {
+        font-size: 0.78rem;
+        color: var(--muted);
+        margin-top: 3px;
+      }
+
+      .modal-close {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+        transition: all 0.2s;
+      }
+
+      .modal-close:hover {
+        color: var(--text);
+        background: var(--bg);
+      }
+
+      .modal-body-custom {
+        padding: 20px;
+      }
+
+      .modal-footer-custom {
+        padding: 0 20px 20px;
+        display: flex;
+        gap: 10px;
+        justify-content: flex-end;
+      }
+
+      .info-row {
+        background: var(--bg3);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 12px 14px;
+        margin-bottom: 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 16px;
+      }
+
+      .info-item {
+        flex: 1;
+        min-width: 90px;
+      }
+      .info-item-label {
+        font-size: 0.65rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+      }
+      .info-item-value {
+        font-size: 0.88rem;
+        color: var(--text);
+        font-weight: 700;
+        margin-top: 3px;
+      }
+
+      .pwd-wrapper {
+        position: relative;
+      }
+      .pwd-wrapper input {
+        padding-right: 42px !important;
+      }
+
+      .pwd-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: var(--muted);
+        cursor: pointer;
+        font-size: 0.95rem;
+        padding: 0;
+      }
+
+      .alert-custom {
+        padding: 10px 14px;
+        border-radius: var(--radius-sm);
+        font-size: 0.82rem;
+        margin-bottom: 14px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .alert-error {
+        background: var(--red-bg);
+        border: 1px solid rgba(255, 77, 77, 0.25);
+        color: var(--red);
+      }
+      .alert-success {
+        background: var(--green-bg);
+        border: 1px solid rgba(0, 196, 140, 0.25);
+        color: #007a58;
+      }
+
+      [data-theme="dark"] .alert-success {
+        color: #6ee7b7;
+      }
+      [data-theme="dark"] .alert-error {
+        color: #fca5a5;
+      }
+
+      .empty-state {
+        text-align: center;
+        padding: 48px 20px;
+        color: var(--muted);
+      }
+      .empty-state i {
+        font-size: 2.5rem;
+        opacity: 0.3;
+        margin-bottom: 12px;
+        display: block;
+      }
+      .empty-state p {
+        font-size: 0.85rem;
+      }
+
+      /* ── Scrollbar ──────────────────────────────────── */
+      ::-webkit-scrollbar {
+        width: 5px;
+        height: 5px;
+      }
+      ::-webkit-scrollbar-track {
+        background: var(--bg2);
+      }
+      ::-webkit-scrollbar-thumb {
+        background: var(--border2);
+        border-radius: 10px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: var(--muted);
+      }
+
+      /* ── Toast ──────────────────────────────────────── */
+      .toast-wrap {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .toast-item {
+        background: var(--card);
+        border: 1px solid var(--border2);
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        font-size: 0.83rem;
+        color: var(--text);
+        box-shadow: var(--shadow-lg);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        animation: slideInRight 0.3s ease;
+        min-width: 240px;
+        max-width: 300px;
+      }
+
+      @keyframes slideInRight {
+        from {
+          transform: translateX(110%);
+          opacity: 0;
+        }
+        to {
+          transform: translateX(0);
+          opacity: 1;
+        }
+      }
+
+      .toast-success {
+        border-left: 3px solid var(--green);
+      }
+      .toast-error {
+        border-left: 3px solid var(--red);
+      }
+
+      @media (max-width: 575px) {
+        .main-wrap {
+          padding: 16px 12px 60px;
+        }
+        .stat-value {
+          font-size: 1.65rem;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="loadingScreen">
+      <div class="loader-ring"></div>
+      <div class="loader-text">Loading Dashboard</div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+      <div class="container-fluid px-3 px-md-4">
+        <a class="navbar-brand" href="#">
+          <div class="brand-icon"><i class="bi bi-building-check"></i></div>
+          <div>
+            BankBenchers<span class="brand-sub">Attendance System</span>
+          </div>
+        </a>
+        <div class="d-flex align-items-center gap-2">
+          <span class="chip-live">
+            <i class="bi bi-circle-fill" style="font-size: 0.45rem"></i> Live
+          </span>
+          <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
+            <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
+            <span id="themeLabel">Dark</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main -->
+    <div class="main-wrap">
+      <!-- Header -->
+      <div class="mb-4">
+        <div class="page-title">Attendance Dashboard</div>
+        <div class="page-subtitle" id="lastUpdated">Loading data...</div>
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-card">
+        <div class="row g-3">
+          <div class="col-12 col-md-5">
+            <label class="filter-label"
+              ><i class="bi bi-person me-1"></i>Employee</label
+            >
+            <select class="form-select" id="empFilter">
+              <option value="">All Employees</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-3">
+            <label class="filter-label"
+              ><i class="bi bi-calendar3 me-1"></i>Year</label
+            >
+            <select class="form-select" id="yearFilter">
+              <option value="">All Years</option>
+            </select>
+          </div>
+          <div class="col-6 col-md-4">
+            <label class="filter-label"
+              ><i class="bi bi-calendar-month me-1"></i>Month</label
+            >
+            <select class="form-select" id="monthFilter">
+              <option value="">All Months</option>
+              <option value="1">January</option>
+              <option value="2">February</option>
+              <option value="3">March</option>
+              <option value="4">April</option>
+              <option value="5">May</option>
+              <option value="6">June</option>
+              <option value="7">July</option>
+              <option value="8">August</option>
+              <option value="9">September</option>
+              <option value="10">October</option>
+              <option value="11">November</option>
+              <option value="12">December</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat Cards -->
+      <div class="stats-grid">
+        <div class="stat-card present">
+          <div class="stat-icon"><i class="bi bi-check-circle-fill"></i></div>
+          <div class="stat-value" id="countPresent">—</div>
+          <div class="stat-label">Present</div>
+        </div>
+        <div class="stat-card absent">
+          <div class="stat-icon"><i class="bi bi-x-circle-fill"></i></div>
+          <div class="stat-value" id="countAbsent">—</div>
+          <div class="stat-label">Absent</div>
+        </div>
+        <div class="stat-card halfday">
+          <div class="stat-icon"><i class="bi bi-clock-fill"></i></div>
+          <div class="stat-value" id="countHalfDay">—</div>
+          <div class="stat-label">Half Day</div>
+        </div>
+        <div class="stat-card latehours">
+          <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
+          <div class="stat-value" id="countLate">—</div>
+          <div class="stat-label">Total Late</div>
+        </div>
+      </div>
+
+      <!-- Section Header -->
+      <div class="section-header">
+        <div class="section-title">
+          <span class="dot"></span>Attendance Logs
+        </div>
+        <span class="records-chip" id="logCount"
+          ><i class="bi bi-list-ul"></i> 0 records</span
+        >
+      </div>
+
+      <!-- DESKTOP TABLE -->
+      <div class="desktop-table">
+        <div class="table-card">
+          <div class="table-responsive">
+            <table class="logs-table">
+              <thead>
+                <tr>
+                  <th>Employee</th>
+                  <th>Date</th>
+                  <th>Punch In</th>
+                  <th>Punch Out</th>
+                  <th>Hours</th>
+                  <th>Status</th>
+                  <th>Late By</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="logsTableBody">
+                <tr>
+                  <td colspan="8">
+                    <div class="empty-state">
+                      <i class="bi bi-inbox"></i>
+                      <p>Loading records...</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOBILE CARDS -->
+      <div class="mobile-cards">
+        <div class="attendance-cards" id="mobileCards">
+          <div class="empty-state">
+            <i class="bi bi-inbox"></i>
+            <p>Loading records...</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /main-wrap -->
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+      <div class="modal-box">
+        <div class="modal-header-custom">
+          <div>
+            <div class="modal-title-custom">
+              <i class="bi bi-pencil-square me-2"></i>Edit Attendance
+            </div>
+            <div class="modal-subtitle">Manager access required</div>
+          </div>
+          <button class="modal-close" onclick="closeModal()">
+            <i class="bi bi-x"></i>
+          </button>
+        </div>
+        <div class="modal-body-custom">
+          <div class="info-row">
+            <div class="info-item">
+              <div class="info-item-label">Employee</div>
+              <div class="info-item-value" id="editEmpName">—</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-label">Date</div>
+              <div class="info-item-value" id="editDate">—</div>
+            </div>
+            <div class="info-item">
+              <div class="info-item-label">Status</div>
+              <div class="info-item-value" id="editStatus">—</div>
+            </div>
+          </div>
+          <div id="modalAlert" style="display: none"></div>
+          <div class="mb-3" id="pwdSection">
+            <label class="filter-label"
+              ><i class="bi bi-shield-lock me-1"></i>Manager Password</label
+            >
+            <div class="pwd-wrapper">
+              <input
+                type="password"
+                class="form-control"
+                id="managerPwd"
+                placeholder="Enter manager password..."
+              />
+              <button class="pwd-toggle" onclick="togglePwd()">
+                <i class="bi bi-eye" id="eyeIcon"></i>
+              </button>
+            </div>
+          </div>
+          <div id="timeInputs" style="display: none">
+            <div class="row g-3">
+              <div class="col-6">
+                <label class="filter-label"
+                  ><i class="bi bi-box-arrow-in-right me-1"></i>Punch In</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editPunchIn"
+                  placeholder="e.g. 09:33:33 AM"
+                />
+              </div>
+              <div class="col-6">
+                <label class="filter-label"
+                  ><i class="bi bi-box-arrow-right me-1"></i>Punch Out</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="editPunchOut"
+                  placeholder="e.g. 06:33:53 PM"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer-custom">
+          <button class="btn-outline-custom" onclick="closeModal()">
+            Cancel
+          </button>
+          <button
+            class="btn-primary-custom"
+            id="modalActionBtn"
+            onclick="handleModalAction()"
+          >
+            <i class="bi bi-shield-check"></i> Verify Password
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast-wrap" id="toastWrap"></div>
+
+    <script>
+      // ── CONFIG ──────────────────────────────────────────────────
+      const APPS_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbxxFtRVqToXh4B0F_9AIUDzpcR5Enw0Tx7gt-8pLWv-QmJRityJ9o0BkpXhNuOsfQ1RUQ/exec";
+
+      const HOLIDAYS = new Set([
+        "2026-01-14",
+        "2026-01-26",
+        "2026-03-04",
+        "2026-08-28",
+        "2026-09-14",
+        "2026-10-02",
+        "2026-10-20",
+        "2026-11-10",
+        "2026-11-11",
+        "2026-12-25",
+      ]);
+
+      // ── State ───────────────────────────────────────────────────
+      let allUsers = [],
+        allAttendance = [];
+      let currentEditRow = null,
+        isUnlocked = false;
+      let userMap = new Map(),
+        dateCache = new Map();
+      const $ = (id) => document.getElementById(id);
+
+      // ── Theme Toggle ────────────────────────────────────────────
+      function toggleTheme() {
+        const html = document.documentElement;
+        const isDark = html.getAttribute("data-theme") === "dark";
+        html.setAttribute("data-theme", isDark ? "light" : "dark");
+        $("themeIcon").className = isDark
+          ? "bi bi-moon-stars-fill"
+          : "bi bi-sun-fill";
+        $("themeLabel").textContent = isDark ? "Dark" : "Light";
+        localStorage.setItem("bb-theme", isDark ? "light" : "dark");
+      }
+
+      // Restore saved theme
+      (function () {
+        const saved = localStorage.getItem("bb-theme");
+        if (saved === "dark") {
+          document.documentElement.setAttribute("data-theme", "dark");
+          setTimeout(() => {
+            $("themeIcon").className = "bi bi-sun-fill";
+            $("themeLabel").textContent = "Light";
+          }, 0);
+        }
+      })();
+
+      // ── Init ────────────────────────────────────────────────────
+      window.addEventListener("DOMContentLoaded", async () => {
+        await loadData();
+        setupFilters();
+        applyFilters();
+        hideLoading();
+      });
+
+      // ── Load Data ───────────────────────────────────────────────
+      async function loadData() {
+        try {
+          const [uRes, aRes] = await Promise.all([
+            fetch(`${APPS_SCRIPT_URL}?action=getUsers`),
+            fetch(`${APPS_SCRIPT_URL}?action=getAttendance`),
+          ]);
+          const uData = await uRes.json();
+          const aData = await aRes.json();
+          allUsers = uData.users || [];
+          allAttendance = aData.records || [];
+          allUsers.forEach((u) =>
+            userMap.set(u["Employee ID"], u["Employee Name"]),
+          );
+          $("lastUpdated").textContent =
+            `Last updated: ${new Date().toLocaleString("en-IN")} • ${allAttendance.length} records`;
+          populateEmployeeFilter();
+          populateYearFilter();
+        } catch (e) {
+          console.error(e);
+          $("lastUpdated").textContent = "⚠ Could not connect to server.";
+          hideLoading();
+        }
+      }
+
+      function populateEmployeeFilter() {
+        const sel = $("empFilter");
+        allUsers.forEach((u) => {
+          if (!u["Employee ID"] || u["Employee ID"] == 1) return;
+          const opt = document.createElement("option");
+          opt.value = u["Employee ID"];
+          opt.textContent = `${u["Employee ID"]} — ${u["Employee Name"]}`;
+          sel.appendChild(opt);
+        });
+      }
+
+      function populateYearFilter() {
+        const years = new Set();
+        allAttendance.forEach((r) => {
+          const d = parseDateStr(r["Date"]);
+          if (d) years.add(d.getFullYear());
+        });
+        const sel = $("yearFilter");
+        [...years]
+          .sort((a, b) => b - a)
+          .forEach((y) => {
+            const opt = document.createElement("option");
+            opt.value = y;
+            opt.textContent = y;
+            sel.appendChild(opt);
+          });
+        if (years.has(new Date().getFullYear()))
+          sel.value = new Date().getFullYear();
+      }
+
+      function setupFilters() {
+        ["empFilter", "yearFilter", "monthFilter"].forEach((id) =>
+          $(id).addEventListener("change", applyFilters),
+        );
+        $("monthFilter").value = new Date().getMonth() + 1;
+      }
+
+      // ── Apply Filters ───────────────────────────────────────────
+      function applyFilters() {
+        const empId = $("empFilter").value;
+        const year = parseInt($("yearFilter").value) || null;
+        const month = parseInt($("monthFilter").value) || null;
+
+        const filtered = allAttendance.filter((r) => {
+          if (empId && r["Employee ID"] !== empId) return false;
+          const d = parseDateStr(r["Date"]);
+          if (!d) return false;
+          if (year && d.getFullYear() !== year) return false;
+          if (month && d.getMonth() + 1 !== month) return false;
+          return true;
+        });
+
+        let present = 0,
+          halfDay = 0,
+          totalLateMinutes = 0;
+        filtered.forEach((r) => {
+          const s = (r["Mark Status"] || "").toString().trim().toUpperCase();
+          if (s === "P") present++;
+          if (s === "HD") halfDay++;
+          totalLateMinutes += lateByToMinutes(r["Late By"]);
+        });
+
+        const absent = calcAbsent(empId, year, month);
+
+        animateCount($("countPresent"), present);
+        animateCount($("countAbsent"), absent);
+        animateCount($("countHalfDay"), halfDay);
+        $("countLate").textContent = minutesToDisplay(totalLateMinutes);
+        $("logCount").innerHTML =
+          `<i class="bi bi-list-ul"></i> ${filtered.length} records`;
+
+        // Sort
+        filtered.sort(
+          (a, b) =>
+            (parseDateStr(b["Date"]) || 0) - (parseDateStr(a["Date"]) || 0),
+        );
+
+        renderDesktopTable(filtered);
+        renderMobileCards(filtered);
+      }
+
+      // ── Desktop Table ───────────────────────────────────────────
+      function renderDesktopTable(records) {
+        if (!records.length) {
+          $("logsTableBody").innerHTML =
+            `<tr><td colspan="8"><div class="empty-state">
+            <i class="bi bi-inbox"></i><p>No records found</p></div></td></tr>`;
+          return;
+        }
+
+        $("logsTableBody").innerHTML = records
+          .map((r) => {
+            const status = (r["Mark Status"] || "")
+              .toString()
+              .trim()
+              .toUpperCase();
+            const empName = userMap.get(r["Employee ID"]) || r["Employee ID"];
+            const lateMin = lateByToMinutes(r["Late By"]);
+            const lateDisp = minutesToDisplay(lateMin);
+            const lateClass =
+              lateMin === 0
+                ? "late-zero"
+                : lateMin < 60
+                  ? "late-low"
+                  : "late-high";
+            const rowIdx = allAttendance.indexOf(r);
+            const badge = getBadge(status);
+
+            return `<tr>
+            <td class="emp-name">${empName}</td>
+            <td>${formatDateDDMMYY(r["Date"])}</td>
+            <td>${r["PunchIn"] || "—"}</td>
+            <td>${r["PunchOut"] || "—"}</td>
+            <td>${r["Difference"] || "—"}</td>
+            <td>${badge}</td>
+            <td class="${lateClass}">${lateDisp}</td>
+            <td><button class="btn-edit" onclick='openEditModal(${JSON.stringify(r)},${rowIdx})'>
+              <i class="bi bi-pencil"></i> Edit
+            </button></td>
+          </tr>`;
+          })
+          .join("");
+      }
+
+      // ── Mobile Cards ────────────────────────────────────────────
+      function renderMobileCards(records) {
+        const container = $("mobileCards");
+
+        if (!records.length) {
+          container.innerHTML = `<div class="empty-state">
+            <i class="bi bi-inbox"></i><p>No records found</p></div>`;
+          return;
+        }
+
+        container.innerHTML = records
+          .map((r) => {
+            const status = (r["Mark Status"] || "")
+              .toString()
+              .trim()
+              .toUpperCase();
+            const empName = userMap.get(r["Employee ID"]) || r["Employee ID"];
+            const lateMin = lateByToMinutes(r["Late By"]);
+            const lateDisp = minutesToDisplay(lateMin);
+            const lateChipClass =
+              lateMin === 0
+                ? "late-zero"
+                : lateMin < 60
+                  ? "late-low"
+                  : "late-high";
+            const rowIdx = allAttendance.indexOf(r);
+            const badge = getBadge(status);
+            const statusClass =
+              status === "P"
+                ? "status-p"
+                : status === "HD"
+                  ? "status-hd"
+                  : "status-a";
+
+            return `<div class="att-card ${statusClass}">
+            <!-- Header: Name + Date -->
+            <div class="att-card-header">
+              <div class="att-card-emp">${empName}</div>
+              <div class="att-card-date">${formatDateDDMMYY(r["Date"])}</div>
+            </div>
+
+            <!-- Times: Punch In | Punch Out | Hours -->
+            <div class="att-card-times">
+              <div class="att-time-item">
+                <div class="att-time-label">Punch In</div>
+                <div class="att-time-value">${r["PunchIn"] || "—"}</div>
+              </div>
+              <div class="att-time-item">
+                <div class="att-time-label">Punch Out</div>
+                <div class="att-time-value">${r["PunchOut"] || "—"}</div>
+              </div>
+              <div class="att-time-item">
+                <div class="att-time-label">Hours</div>
+                <div class="att-time-value">${r["Difference"] || "—"}</div>
+              </div>
+            </div>
+
+            <!-- Footer: Status + Late + Edit -->
+            <div class="att-card-footer">
+              <div class="att-footer-left">
+                ${badge}
+                <span class="late-chip ${lateChipClass}">
+                  <i class="bi bi-clock"></i> ${lateDisp}
+                </span>
+              </div>
+              <button class="btn-edit" onclick='openEditModal(${JSON.stringify(r)},${rowIdx})'>
+                <i class="bi bi-pencil"></i> Edit
+              </button>
+            </div>
+          </div>`;
+          })
+          .join("");
+      }
+
+      // ── Badge Helper ────────────────────────────────────────────
+      function getBadge(status) {
+        if (status === "P")
+          return `<span class="badge-status badge-p"><i class="bi bi-check2"></i>Present</span>`;
+        if (status === "HD")
+          return `<span class="badge-status badge-hd"><i class="bi bi-clock"></i>Half Day</span>`;
+        return `<span class="badge-status badge-a"><i class="bi bi-x"></i>Absent</span>`;
+      }
+
+      // ══════════════════════════════════════════════════════════
+      //  LATE BY HELPERS
+      // ══════════════════════════════════════════════════════════
+      function lateByToMinutes(val) {
+        if (val === null || val === undefined || val === "") return 0;
+        const str = val.toString().trim();
+        if (!str || str === "0") return 0;
+
+        // HH:MM:SS
+        const colonMatch = str.match(/^(\d{1,3}):(\d{2})(?::(\d{2}))?$/);
+        if (colonMatch) {
+          return (
+            (parseInt(colonMatch[1]) || 0) * 60 + (parseInt(colonMatch[2]) || 0)
+          );
+        }
+
+        // Excel decimal
+        if (!isNaN(str) && !str.includes("/") && !str.includes(":")) {
+          const num = parseFloat(str);
+          if (num > 0 && num < 1) return Math.round(num * 1440);
+          if (num >= 1) return Math.floor(num / 60);
+        }
+
+        // Datetime string
+        const dtMatch = str.match(/(\d{1,2}):(\d{2}):(\d{2})\s*(AM|PM)?/i);
+        if (dtMatch) {
+          let h = parseInt(dtMatch[1]) || 0;
+          const m = parseInt(dtMatch[2]) || 0;
+          const ampm = dtMatch[4] ? dtMatch[4].toUpperCase() : null;
+          if (ampm === "PM" && h !== 12) h += 12;
+          if (ampm === "AM" && h === 12) h = 0;
+          return h * 60 + m;
+        }
+
+        return 0;
+      }
+
+      function minutesToDisplay(totalMinutes) {
+        if (!totalMinutes || totalMinutes <= 0) return "0 min";
+        const h = Math.floor(totalMinutes / 60);
+        const m = totalMinutes % 60;
+        if (h === 0) return `${m} min`;
+        if (m === 0) return `${h} hr`;
+        return `${h} hr ${m} min`;
+      }
+
+      // ── Absent Calculation ──────────────────────────────────────
+      function calcAbsent(empId, year, month) {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const employees = empId
+          ? allUsers.filter((u) => u["Employee ID"] === empId)
+          : allUsers.filter((u) => u["Employee ID"] && u["Employee ID"] != 1);
+
+        let total = 0;
+        employees.forEach((emp) => {
+          const doj = emp["DOJ"] ? parseSheetDate(emp["DOJ"].toString()) : null;
+          const presentDates = new Set(
+            allAttendance
+              .filter((r) => r["Employee ID"] === emp["Employee ID"])
+              .map((r) => {
+                const d = parseDateStr(r["Date"]);
+                return d ? fmtKey(d) : null;
+              })
+              .filter(Boolean),
+          );
+          const sy = year || new Date().getFullYear(),
+            sm = month || 1;
+          const ey = year || new Date().getFullYear(),
+            em = month || 12;
+          let cursor = new Date(sy, sm - 1, 1);
+          const rangeEnd = new Date(ey, em, 0);
+          while (cursor <= rangeEnd && cursor <= today) {
+            const dow = cursor.getDay(),
+              key = fmtKey(cursor);
+            if (
+              dow !== 0 &&
+              dow !== 6 &&
+              !HOLIDAYS.has(key) &&
+              !(doj && cursor < doj) &&
+              !presentDates.has(key)
+            )
+              total++;
+            cursor.setDate(cursor.getDate() + 1);
+          }
+        });
+        return total;
+      }
+
+      // ── Edit Modal ──────────────────────────────────────────────
+      function openEditModal(record, rowIdx) {
+        currentEditRow = { record, rowIdx };
+        isUnlocked = false;
+        $("editEmpName").textContent =
+          userMap.get(record["Employee ID"]) || record["Employee ID"];
+        $("editDate").textContent = record["Date"] || "—";
+        $("editStatus").textContent = record["Mark Status"] || "—";
+        $("managerPwd").value = "";
+        $("timeInputs").style.display = "none";
+        $("pwdSection").style.display = "block";
+        $("modalActionBtn").innerHTML =
+          '<i class="bi bi-shield-check"></i> Verify Password';
+        $("editPunchIn").value = record["PunchIn"] || "";
+        $("editPunchOut").value = record["PunchOut"] || "";
+        hideModalAlert();
+        $("editModal").classList.add("active");
+      }
+
+      function closeModal() {
+        $("editModal").classList.remove("active");
+        currentEditRow = null;
+        isUnlocked = false;
+      }
+
+      function handleModalAction() {
+        if (!isUnlocked) verifyPassword();
+        else saveEdit();
+      }
+
+      function verifyPassword() {
+        const pwd = $("managerPwd").value;
+        if (!pwd) {
+          showModalAlert("Please enter the manager password.", "error");
+          return;
+        }
+        if (pwd === "333") {
+          isUnlocked = true;
+          $("pwdSection").style.display = "none";
+          $("timeInputs").style.display = "block";
+          $("modalActionBtn").innerHTML =
+            '<i class="bi bi-check-circle"></i> Save Changes';
+          hideModalAlert();
+          showModalAlert(
+            "✓ Access granted. You can now edit the times.",
+            "success",
+          );
+        } else {
+          showModalAlert("Incorrect password. Access denied.", "error");
+          $("managerPwd").value = "";
+        }
+      }
+
+      async function saveEdit() {
+        const punchIn = $("editPunchIn").value.trim();
+        const punchOut = $("editPunchOut").value.trim();
+        if (!punchIn || !punchOut) {
+          showModalAlert(
+            "Please fill both Punch In and Punch Out times.",
+            "error",
+          );
+          return;
+        }
+
+        const btn = $("modalActionBtn");
+        btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
+        btn.disabled = true;
+
+        try {
+          const res = await fetch(APPS_SCRIPT_URL, {
+            method: "POST",
+            body: JSON.stringify({
+              action: "editAttendance",
+              password: "333",
+              rowIndex: currentEditRow.rowIdx + 1,
+              punchIn,
+              punchOut,
+            }),
+          });
+          const data = await res.json();
+          if (data.success) {
+            const rec = allAttendance[currentEditRow.rowIdx];
+            if (rec) {
+              rec["PunchIn"] = punchIn;
+              rec["PunchOut"] = punchOut;
+            }
+            closeModal();
+            applyFilters();
+            showToast("Attendance updated successfully!", "success");
+          } else {
+            showModalAlert(data.error || "Update failed.", "error");
+          }
+        } catch (e) {
+          showModalAlert("Network error. Please try again.", "error");
+        } finally {
+          btn.innerHTML = '<i class="bi bi-check-circle"></i> Save Changes';
+          btn.disabled = false;
+        }
+      }
+
+      // ── Utilities ───────────────────────────────────────────────
+      function parseDateStr(str) {
+        if (!str) return null;
+        if (dateCache.has(str)) return dateCache.get(str);
+        const p = str.toString().split("/");
+        let result = null;
+        if (p.length === 3) {
+          const y = p[2].length === 2 ? 2000 + parseInt(p[2]) : parseInt(p[2]);
+          result = new Date(y, parseInt(p[0]) - 1, parseInt(p[1]));
+        }
+        dateCache.set(str, result);
+        return result;
+      }
+
+      function parseSheetDate(val) {
+        if (!val) return null;
+        const p = val.split("-");
+        if (p.length === 3)
+          return new Date(parseInt(p[2]), parseInt(p[1]) - 1, parseInt(p[0]));
+        return null;
+      }
+
+      function fmtKey(d) {
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      }
+
+      function formatDateDDMMYY(str) {
+        if (!str) return "—";
+        const p = str.toString().split("/");
+        if (p.length === 3) return `${p[1]}/${p[0]}/${p[2]}`;
+        return str;
+      }
+
+      function animateCount(el, target) {
+        const start = parseInt(el.textContent) || 0,
+          dur = 600,
+          t0 = performance.now();
+        function step(now) {
+          const p = Math.min((now - t0) / dur, 1),
+            ease = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(start + (target - start) * ease);
+          if (p < 1) requestAnimationFrame(step);
+        }
+        requestAnimationFrame(step);
+      }
+
+      function showModalAlert(msg, type) {
+        const el = $("modalAlert");
+        el.style.display = "flex";
+        el.className = `alert-custom alert-${type}`;
+        el.innerHTML = `<i class="bi bi-${type === "error" ? "exclamation-circle" : "check-circle"}"></i> ${msg}`;
+      }
+
+      function hideModalAlert() {
+        $("modalAlert").style.display = "none";
+      }
+
+      function togglePwd() {
+        const inp = $("managerPwd"),
+          ico = $("eyeIcon");
+        if (inp.type === "password") {
+          inp.type = "text";
+          ico.className = "bi bi-eye-slash";
+        } else {
+          inp.type = "password";
+          ico.className = "bi bi-eye";
+        }
+      }
+
+      function showToast(msg, type = "success") {
+        const t = document.createElement("div");
+        t.className = `toast-item toast-${type}`;
+        t.innerHTML = `<i class="bi bi-${type === "success" ? "check-circle-fill" : "exclamation-circle-fill"}" style="color:var(--${type === "success" ? "green" : "red"})"></i> ${msg}`;
+        $("toastWrap").appendChild(t);
+        setTimeout(() => t.remove(), 4000);
+      }
+
+      function hideLoading() {
+        const ls = $("loadingScreen");
+        ls.style.opacity = "0";
+        ls.style.transition = "opacity 0.4s";
+        setTimeout(() => (ls.style.display = "none"), 400);
+      }
+
+      $("editModal").addEventListener("click", function (e) {
+        if (e.target === this) closeModal();
+      });
+    </script>
+  </body>
+</html>

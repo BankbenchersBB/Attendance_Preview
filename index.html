@@ -687,14 +687,8 @@
         font-weight: 700;
         font-family: "JetBrains Mono", monospace;
       }
-      .late-chip i {
+      .late-chip i::before {
         background: transparent !important;
-      }
-      .late-chip i,
-      .btn-edit i,
-      .badge-status i {
-        background: transparent !important;
-        line-height: 1 !important;
       }
 
       .late-chip.late-zero {
@@ -766,6 +760,10 @@
         align-items: center;
         gap: 4px;
         white-space: nowrap;
+      }
+
+      .btn-edit i::before {
+        background: transparent !important;
       }
 
       .btn-edit:hover {

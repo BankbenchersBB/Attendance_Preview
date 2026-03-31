@@ -1,384 +1,278 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="data:," />
-    <title>BankBenchers — Attendance Dashboard</title>
+    <title>Attendance Dashboard</title>
     <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-
     <style>
-      /* ── LIGHT THEME (default) ─────────────────────── */
-      :root,
-      [data-theme="light"] {
-        --bg: #f0f4ff;
-        --bg2: #ffffff;
-        --bg3: #e8eef8;
-        --card: #ffffff;
-        --card2: #f5f8ff;
-        --border: rgba(26, 33, 81, 0.08);
-        --border2: rgba(26, 33, 81, 0.15);
-        --text: #1a2151;
-        --text2: #3d4a7a;
-        --muted: #8892b0;
-        --accent: #1a2151;
-        --accent2: #4f6fe8;
-        --green: #00c48c;
-        --green-bg: #e6fbf5;
-        --orange: #f5a623;
-        --orange-bg: #fff4e0;
-        --red: #ff4d4d;
-        --red-bg: #ffe8e8;
-        --purple: #7b2ff7;
-        --purple-bg: #f0e6ff;
-        --cyan: #0099cc;
-        --cyan-bg: #e0f5ff;
-        --late-clr: #b8cc00;
-        --late-bg: #f7ffb8;
-        --shadow: 0 2px 16px rgba(26, 33, 81, 0.08);
-        --shadow-lg: 0 8px 32px rgba(26, 33, 81, 0.14);
-        --radius: 16px;
-        --radius-sm: 10px;
-        --navbar-bg: #1a2151;
-        --navbar-text: #ffffff;
+      :root {
+        --primary: #1a2744;
+        --secondary: #a8c4d4;
+        --card-bg: #ffffff;
+        --stroke2: #d0dbe6;
+        --tertiary: #1e3a5f;
+        --text-primary: #1a2744;
+        --text-secondary: #5a6a7a;
+        --text-tertiary: #8a9aaa;
+        --late-bg: #f0f4c3;
+        --late-text: #827717;
+        --absent-bg: #fdecea;
+        --absent-text: #c62828;
+        --present-bg: #e8f5e9;
+        --present-text: #2e7d32;
+        --halfday-bg: #fff3e0;
+        --halfday-text: #e65100;
+        --bg: #f0f4f8;
+        --sidebar-w: 260px;
       }
-
-      /* ── DARK THEME ────────────────────────────────── */
-      [data-theme="dark"] {
-        --bg: #0a0e1a;
-        --bg2: #0f1525;
-        --bg3: #141b30;
-        --card: #161d32;
-        --card2: #1c2540;
-        --border: rgba(255, 255, 255, 0.07);
-        --border2: rgba(255, 255, 255, 0.12);
-        --text: #e8eaf6;
-        --text2: #b0bcd8;
-        --muted: #8892b0;
-        --accent: #4f8ef7;
-        --accent2: #7c3aed;
-        --green: #10b981;
-        --green-bg: rgba(16, 185, 129, 0.12);
-        --orange: #f59e0b;
-        --orange-bg: rgba(245, 158, 11, 0.12);
-        --red: #ef4444;
-        --red-bg: rgba(239, 68, 68, 0.12);
-        --purple: #a855f7;
-        --purple-bg: rgba(168, 85, 247, 0.12);
-        --cyan: #06b6d4;
-        --cyan-bg: rgba(6, 182, 212, 0.12);
-        --late-clr: #c8e000;
-        --late-bg: rgba(200, 224, 0, 0.12);
-        --shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
-        --shadow-lg: 0 8px 48px rgba(0, 0, 0, 0.6);
-        --navbar-bg: #0a0e1a;
-        --navbar-text: #e8eaf6;
-      }
-
-      /* ── Base ───────────────────────────────────────── */
       * {
-        box-sizing: border-box;
         margin: 0;
         padding: 0;
-      }
-      html {
-        scroll-behavior: smooth;
+        box-sizing: border-box;
       }
       body {
-        font-family: "Plus Jakarta Sans", sans-serif;
+        font-family: "DM Sans", sans-serif;
         background: var(--bg);
-        color: var(--text);
+        color: var(--text-primary);
         min-height: 100vh;
-        overflow-x: hidden;
-        transition:
-          background 0.3s,
-          color 0.3s;
-      }
-
-      /* ── Navbar ─────────────────────────────────────── */
-      .navbar {
-        background: var(--navbar-bg) !important;
-        border-bottom: 1px solid var(--border);
-        padding: 12px 0;
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        box-shadow: var(--shadow);
-        transition: background 0.3s;
-      }
-
-      .navbar-brand {
-        font-weight: 800;
-        font-size: 1.15rem;
-        letter-spacing: -0.3px;
-        color: #ffffff !important;
         display: flex;
-        align-items: center;
-        gap: 10px;
-        text-decoration: none;
       }
 
-      .brand-icon {
-        width: 36px;
-        height: 36px;
-        background: rgba(255, 255, 255, 0.15);
-        border-radius: 10px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      }
-
-      .brand-sub {
-        font-size: 0.62rem;
-        font-weight: 500;
-        color: rgba(255, 255, 255, 0.6);
-        letter-spacing: 1.5px;
-        text-transform: uppercase;
-        display: block;
-        line-height: 1;
-      }
-
-      /* ── Theme Toggle ───────────────────────────────── */
-      .theme-toggle {
-        background: rgba(255, 255, 255, 0.1);
-        border: 1px solid rgba(255, 255, 255, 0.2);
-        border-radius: 50px;
-        padding: 5px 12px;
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        cursor: pointer;
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: rgba(255, 255, 255, 0.85);
-        transition: all 0.2s;
-        white-space: nowrap;
-      }
-
-      .theme-toggle:hover {
-        background: rgba(255, 255, 255, 0.18);
-        color: #fff;
-      }
-
-      .theme-toggle i {
-        font-size: 0.9rem;
-      }
-
-      /* Live chip */
-      .chip-live {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: rgba(0, 196, 140, 0.15);
-        border: 1px solid rgba(0, 196, 140, 0.3);
-        color: #00c48c;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 0.72rem;
-        font-weight: 700;
-      }
-
-      /* ── Loading ────────────────────────────────────── */
-      #loadingScreen {
+      /* HAMBURGER */
+      .hamburger {
+        display: none;
         position: fixed;
-        inset: 0;
-        background: var(--bg);
-        z-index: 9999;
-        display: flex;
+        top: 14px;
+        left: 14px;
+        z-index: 200;
+        background: var(--primary);
+        border: none;
+        border-radius: 8px;
+        width: 40px;
+        height: 40px;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 16px;
-        transition: background 0.3s;
+        gap: 5px;
+        cursor: pointer;
       }
-
-      .loader-ring {
-        width: 48px;
-        height: 48px;
-        border: 3px solid var(--border2);
-        border-top-color: var(--accent2);
-        border-radius: 50%;
-        animation: spin 0.8s linear infinite;
+      .hamburger span {
+        display: block;
+        width: 20px;
+        height: 2px;
+        background: #fff;
+        border-radius: 2px;
       }
-
-      @keyframes spin {
-        to {
-          transform: rotate(360deg);
-        }
+      .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
       }
-
-      .loader-text {
-        font-size: 0.8rem;
-        color: var(--muted);
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        animation: pulse 1.5s ease-in-out infinite;
-      }
-
-      @keyframes pulse {
-        0%,
-        100% {
-          opacity: 0.4;
-        }
-        50% {
-          opacity: 1;
-        }
-      }
-
-      /* ── Main ───────────────────────────────────────── */
-      .main-wrap {
-        padding: 24px 16px 60px;
-        max-width: 1200px;
-        margin: 0 auto;
-      }
-
-      .page-title {
-        font-size: clamp(1.3rem, 4vw, 1.8rem);
-        font-weight: 800;
-        letter-spacing: -0.5px;
-        color: var(--text);
-        line-height: 1.2;
-      }
-
-      .page-subtitle {
-        font-size: 0.82rem;
-        color: var(--muted);
-        margin-top: 3px;
-      }
-
-      /* ── Filter Card ────────────────────────────────── */
-      .filter-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 18px;
-        margin-bottom: 20px;
-        box-shadow: var(--shadow);
-      }
-
-      .filter-label {
-        font-size: 0.7rem;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1.2px;
-        color: var(--muted);
-        margin-bottom: 7px;
+      .sidebar-overlay.active {
         display: block;
       }
 
-      .form-select,
-      .form-control {
-        background: var(--bg) !important;
-        border: 1.5px solid var(--border2) !important;
-        color: var(--text) !important;
-        border-radius: var(--radius-sm) !important;
-        font-size: 0.88rem !important;
-        padding: 10px 14px !important;
-        font-weight: 500 !important;
+      /* SIDEBAR */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-height: 100vh;
+        background: var(--primary);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        z-index: 100;
+        box-shadow: 4px 0 24px rgba(26, 39, 68, 0.15);
+        transition: transform 0.3s ease;
+        overflow-y: auto;
+      }
+      .sidebar-logo {
+        padding: 24px 20px 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        flex-shrink: 0;
+      }
+      .sidebar-logo h2 {
+        color: #fff;
+        font-size: 22px;
+        font-weight: 700;
+      }
+      .sidebar-logo p {
+        color: var(--secondary);
+        font-size: 12px;
+        margin-top: 2px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+      }
+      .sidebar-section {
+        padding: 18px 18px 6px;
+      }
+      .sidebar-section-label {
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1.2px;
+        text-transform: uppercase;
+        color: rgba(168, 196, 212, 0.6);
+        margin-bottom: 10px;
+      }
+      .filter-group {
+        margin-bottom: 14px;
+      }
+      .filter-label {
+        display: block;
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--secondary);
+        margin-bottom: 5px;
+      }
+      .filter-select,
+      .filter-input {
+        width: 100%;
+        padding: 8px 11px;
+        background: rgba(255, 255, 255, 0.07);
+        border: 1px solid rgba(168, 196, 212, 0.2);
+        border-radius: 8px;
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.2s;
+        appearance: none;
+        -webkit-appearance: none;
+        cursor: pointer;
+      }
+      .filter-select:focus,
+      .filter-input:focus {
+        border-color: var(--secondary);
+        background: rgba(255, 255, 255, 0.12);
+      }
+      .filter-select option {
+        background: var(--primary);
+        color: #fff;
+      }
+      .select-wrapper {
+        position: relative;
+      }
+      .select-wrapper::after {
+        content: "▾";
+        position: absolute;
+        right: 11px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--secondary);
+        pointer-events: none;
+        font-size: 12px;
+      }
+      .clear-btn {
+        width: 100%;
+        padding: 9px;
+        background: transparent;
+        color: rgba(168, 196, 212, 0.7);
+        border: 1px solid rgba(168, 196, 212, 0.2);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.2s;
+        margin-top: 6px;
+      }
+      .clear-btn:hover {
+        border-color: var(--secondary);
+        color: var(--secondary);
+      }
+      .sidebar-footer {
+        margin-top: auto;
+        padding: 18px;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        flex-shrink: 0;
+      }
+      .last-refresh {
+        font-size: 10px;
+        color: rgba(168, 196, 212, 0.5);
+        text-align: center;
+        line-height: 1.6;
+        white-space: pre-line;
+      }
+      .refresh-btn {
+        width: 100%;
+        margin-top: 8px;
+        padding: 8px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(168, 196, 212, 0.15);
+        border-radius: 8px;
+        color: var(--secondary);
+        font-family: "DM Sans", sans-serif;
+        font-size: 12px;
+        cursor: pointer;
         transition: all 0.2s;
       }
-
-      .form-select:focus,
-      .form-control:focus {
-        border-color: var(--accent2) !important;
-        box-shadow: 0 0 0 3px rgba(79, 111, 232, 0.12) !important;
-        outline: none !important;
+      .refresh-btn:hover {
+        background: rgba(255, 255, 255, 0.12);
       }
 
-      .form-select option {
-        background: var(--card);
-        color: var(--text);
+      /* MAIN */
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        padding: 28px;
+        min-height: 100vh;
       }
-
-      .btn-primary {
-        background: var(--accent2) !important;
-        border: 1.5px solid var(--accent2) !important;
-        color: #ffffff !important;
-        border-radius: var(--radius-sm) !important;
-        font-size: 0.88rem !important;
-        padding: 10px 14px !important;
-        font-weight: 600 !important;
-        transition: all 0.2s;
-      }
-
-      .btn-primary:hover {
-        background: var(--accent) !important;
-        border-color: var(--accent) !important;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(79, 111, 232, 0.3) !important;
-      }
-
-      /* ── Stat Cards ─────────────────────────────────── */
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
+      .page-header {
         margin-bottom: 22px;
       }
-
-      @media (min-width: 768px) {
-        .stats-grid {
-          grid-template-columns: repeat(4, 1fr);
-        }
+      .page-header h1 {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--primary);
+        letter-spacing: -0.5px;
+      }
+      .page-header p {
+        color: var(--text-secondary);
+        font-size: 13px;
+        margin-top: 3px;
+      }
+      #active-filter-label {
+        display: inline-block;
+        margin-top: 8px;
+        padding: 4px 12px;
+        background: var(--primary);
+        color: var(--secondary);
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
       }
 
+      /* CARDS */
+      .cards-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 14px;
+        margin-bottom: 24px;
+      }
       .stat-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 18px 16px;
+        background: var(--card-bg);
+        border-radius: 14px;
+        padding: 18px 20px;
+        border: 1px solid var(--stroke2);
+        box-shadow: 0 2px 12px rgba(26, 39, 68, 0.06);
         position: relative;
         overflow: hidden;
-        box-shadow: var(--shadow);
         transition:
           transform 0.2s,
-          box-shadow 0.2s,
-          background 0.3s;
-        cursor: default;
+          box-shadow 0.2s;
       }
-
       .stat-card:hover {
-        transform: translateY(-3px);
-        box-shadow: var(--shadow-lg);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(26, 39, 68, 0.1);
       }
-
-      .stat-card::after {
-        content: "";
-        position: absolute;
-        bottom: -20px;
-        right: -20px;
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        opacity: 0.06;
-      }
-
-      .stat-card.present::after {
-        background: var(--green);
-      }
-      .stat-card.absent::after {
-        background: var(--red);
-      }
-      .stat-card.halfday::after {
-        background: var(--purple);
-      }
-      .stat-card.latehours::after {
-        background: var(--cyan);
-      }
-
       .stat-card::before {
         content: "";
         position: absolute;
@@ -386,1007 +280,412 @@
         left: 0;
         right: 0;
         height: 3px;
-        border-radius: var(--radius) var(--radius) 0 0;
+        border-radius: 14px 14px 0 0;
       }
-
       .stat-card.present::before {
-        background: var(--green);
+        background: #4caf50;
       }
       .stat-card.absent::before {
-        background: var(--red);
+        background: #f44336;
       }
       .stat-card.halfday::before {
-        background: var(--purple);
+        background: #ff9800;
       }
-      .stat-card.latehours::before {
-        background: var(--cyan);
+      .stat-card.late::before {
+        background: #cddc39;
       }
-
       .stat-icon {
-        width: 40px;
-        height: 40px;
-        border-radius: 12px;
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.15rem;
-        margin-bottom: 14px;
+        font-size: 16px;
+        margin-bottom: 12px;
       }
-
       .stat-card.present .stat-icon {
-        background: var(--green-bg);
-        color: var(--green);
+        background: var(--present-bg);
       }
       .stat-card.absent .stat-icon {
-        background: var(--red-bg);
-        color: var(--red);
+        background: var(--absent-bg);
       }
       .stat-card.halfday .stat-icon {
-        background: var(--purple-bg);
-        color: var(--purple);
+        background: var(--halfday-bg);
       }
-      .stat-card.latehours .stat-icon {
-        background: var(--cyan-bg);
-        color: var(--cyan);
+      .stat-card.late .stat-icon {
+        background: var(--late-bg);
       }
-
       .stat-value {
-        font-size: 2rem;
-        font-weight: 800;
+        font-size: 28px;
+        font-weight: 700;
         letter-spacing: -1px;
         line-height: 1;
-        font-family: "JetBrains Mono", monospace;
+        font-family: "DM Mono", monospace;
       }
-
       .stat-card.present .stat-value {
-        color: var(--green);
+        color: var(--present-text);
       }
       .stat-card.absent .stat-value {
-        color: var(--red);
+        color: var(--absent-text);
       }
       .stat-card.halfday .stat-value {
-        color: var(--purple);
+        color: var(--halfday-text);
       }
-      .stat-card.latehours .stat-value {
-        color: var(--cyan);
-        font-size: 1.3rem;
-        letter-spacing: -0.5px;
+      .stat-card.late .stat-value {
+        color: var(--late-text);
       }
-
       .stat-label {
-        font-size: 0.72rem;
-        color: var(--muted);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 1px;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-secondary);
         margin-top: 5px;
       }
+      .stat-sub {
+        font-size: 10px;
+        color: var(--text-tertiary);
+        margin-top: 2px;
+      }
 
-      /* ── Section Header ─────────────────────────────── */
-      .section-header {
+      /* TABLE */
+      .table-section {
+        background: var(--card-bg);
+        border-radius: 14px;
+        border: 1px solid var(--stroke2);
+        box-shadow: 0 2px 12px rgba(26, 39, 68, 0.06);
+        overflow: hidden;
+      }
+      .table-header {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 14px;
+        padding: 16px 22px;
+        border-bottom: 1px solid var(--stroke2);
         flex-wrap: wrap;
-        gap: 10px;
-      }
-
-      .section-title {
-        font-size: 1rem;
-        font-weight: 700;
-        color: var(--text);
-        display: flex;
-        align-items: center;
         gap: 8px;
       }
-
-      .section-title .dot {
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        background: var(--accent2);
-        box-shadow: 0 0 0 3px rgba(79, 111, 232, 0.15);
+      .table-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--primary);
       }
-
-      .records-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        color: var(--text2);
+      .table-count {
+        font-size: 12px;
+        color: var(--text-secondary);
+        background: var(--bg);
         padding: 4px 12px;
         border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 600;
+        font-weight: 500;
       }
-
-      /* ══════════════════════════════════════════════════
-         DESKTOP TABLE
-      ══════════════════════════════════════════════════ */
-      .table-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        overflow: hidden;
-        box-shadow: var(--shadow);
-        margin-bottom: 24px;
-      }
-
-      .table-responsive {
+      .table-wrap {
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
       }
-
-      .logs-table {
+      table {
         width: 100%;
         border-collapse: collapse;
-        font-size: 0.83rem;
+        min-width: 500px;
       }
-
-      .logs-table thead th {
-        background: var(--bg3);
-        color: var(--muted);
-        font-size: 0.68rem;
-        font-weight: 700;
+      thead th {
+        background: #f7f9fb;
+        padding: 11px 14px;
+        text-align: left;
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text-secondary);
+        letter-spacing: 0.8px;
         text-transform: uppercase;
-        letter-spacing: 1.2px;
-        padding: 12px 16px;
-        border-bottom: 1px solid var(--border);
+        border-bottom: 1px solid var(--stroke2);
         white-space: nowrap;
       }
-
-      .logs-table tbody tr {
-        border-bottom: 1px solid var(--border);
+      tbody tr {
+        border-bottom: 1px solid #f0f4f8;
         transition: background 0.15s;
       }
-
-      .logs-table tbody tr:hover {
-        background: var(--bg3);
-      }
-      .logs-table tbody tr:last-child {
+      tbody tr:last-child {
         border-bottom: none;
       }
-
-      .logs-table tbody td {
-        padding: 12px 16px;
-        color: var(--text);
-        white-space: nowrap;
-        font-family: "JetBrains Mono", monospace;
-        font-size: 0.8rem;
+      tbody tr:hover {
+        background: #f7fbff;
       }
-
-      .logs-table tbody td.emp-name {
-        font-family: "Plus Jakarta Sans", sans-serif;
-        font-weight: 700;
-        font-size: 0.85rem;
-        color: var(--text);
+      tbody td {
+        padding: 11px 14px;
+        font-size: 13px;
+        color: var(--text-primary);
+        vertical-align: middle;
       }
-
-      /* ── Show/Hide desktop vs mobile ──────────────────── */
-      .desktop-table {
-        display: block;
+      .emp-name {
+        font-weight: 600;
+        color: var(--primary);
       }
-      .mobile-cards {
-        display: none;
+      .emp-id {
+        font-size: 11px;
+        color: var(--text-tertiary);
+        font-family: "DM Mono", monospace;
+        margin-top: 1px;
       }
-
-      @media (max-width: 767px) {
-        .desktop-table {
-          display: none;
-        }
-        .mobile-cards {
-          display: block;
-        }
+      .time-val {
+        font-family: "DM Mono", monospace;
+        font-size: 12px;
       }
-
-      /* ══════════════════════════════════════════════════
-         MOBILE CARDS
-      ══════════════════════════════════════════════════ */
-      .attendance-cards {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 24px;
+      .punch-in {
+        color: var(--present-text);
       }
-
-      .att-card {
-        background: var(--card);
-        border: 1px solid var(--border);
-        border-radius: var(--radius);
-        padding: 14px 16px;
-        box-shadow: var(--shadow);
-        transition:
-          background 0.3s,
-          box-shadow 0.2s;
-        position: relative;
-        overflow: hidden;
+      .punch-out {
+        color: var(--tertiary);
       }
-
-      .att-card::before {
-        content: "";
-        position: absolute;
-        left: 0;
-        top: 0;
-        bottom: 0;
-        width: 4px;
-        border-radius: var(--radius) 0 0 var(--radius);
+      .punch-none {
+        color: var(--text-tertiary);
+        font-style: italic;
       }
-
-      .att-card.status-p ::before,
-      .att-card.status-p::before {
-        background: var(--green);
-      }
-      .att-card.status-hd::before {
-        background: var(--purple);
-      }
-      .att-card.status-a::before {
-        background: var(--red);
-      }
-
-      /* Card Header Row */
-      .att-card-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 10px;
-      }
-
-      .att-card-emp {
-        font-weight: 700;
-        font-size: 0.9rem;
-        color: var(--text);
-      }
-
-      .att-card-date {
-        font-size: 0.75rem;
-        color: var(--muted);
-        font-family: "JetBrains Mono", monospace;
-        background: var(--bg3);
+      .late-badge {
+        display: inline-block;
         padding: 3px 8px;
         border-radius: 6px;
-        border: 1px solid var(--border);
-      }
-
-      /* Card Body — 3 columns: Punch In | Punch Out | Hours */
-      .att-card-times {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 8px;
-        margin-bottom: 10px;
-        background: var(--bg3);
-        border-radius: 10px;
-        padding: 10px 12px;
-        border: 1px solid var(--border);
-      }
-
-      .att-time-item {
-      }
-
-      .att-time-label {
-        font-size: 0.62rem;
-        color: var(--muted);
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.8px;
-        margin-bottom: 2px;
-      }
-
-      .att-time-value {
-        font-size: 0.82rem;
-        color: var(--text);
-        font-family: "JetBrains Mono", monospace;
+        font-size: 11px;
         font-weight: 600;
-      }
-
-      /* Card Footer Row */
-      .att-card-footer {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .att-footer-left {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      /* Late By chip on card */
-      .late-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 3px 9px;
-        border-radius: 8px;
-        font-size: 0.72rem;
-        font-weight: 700;
-        font-family: "JetBrains Mono", monospace;
-      }
-      .late-chip i::before {
-        background: transparent !important;
-      }
-
-      .late-chip.late-zero {
-        background: var(--green-bg);
-        color: var(--green);
-      }
-      .late-chip.late-low {
+        font-family: "DM Mono", monospace;
         background: var(--late-bg);
-        color: #7a8800;
+        color: var(--late-text);
       }
-      .late-chip.late-high {
-        background: var(--red-bg);
-        color: var(--red);
-      }
-
-      /* ── Status Badges ──────────────────────────────── */
-      .badge-status {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 4px 11px;
+      .status-badge {
+        display: inline-block;
+        padding: 3px 9px;
         border-radius: 20px;
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.3px;
-        font-family: "Plus Jakarta Sans", sans-serif;
-        white-space: nowrap;
-      }
-
-      .badge-p {
-        background: var(--green-bg);
-        color: var(--green);
-        border: 1px solid rgba(0, 196, 140, 0.25);
-      }
-      .badge-hd {
-        background: var(--purple-bg);
-        color: var(--purple);
-        border: 1px solid rgba(123, 47, 247, 0.25);
-      }
-      .badge-a {
-        background: var(--red-bg);
-        color: var(--red);
-        border: 1px solid rgba(255, 77, 77, 0.25);
-      }
-
-      /* Late colors in table */
-      .late-zero {
-        color: var(--green);
-      }
-      .late-low {
-        color: #7a8800;
-      }
-      .late-high {
-        color: var(--red);
-      }
-
-      /* ── Buttons ────────────────────────────────────── */
-      .btn-edit {
-        background: var(--bg3);
-        border: 1px solid var(--border2);
-        color: var(--text2);
-        padding: 5px 12px;
-        border-radius: var(--radius-sm);
-        font-size: 0.72rem;
+        font-size: 11px;
         font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        white-space: nowrap;
+      }
+      .status-P {
+        background: var(--present-bg);
+        color: var(--present-text);
+      }
+      .status-HD {
+        background: var(--halfday-bg);
+        color: var(--halfday-text);
       }
 
-      .btn-edit i::before {
-        background: transparent !important;
-      }
-
-      .btn-edit:hover {
-        background: rgba(79, 142, 247, 0.1);
-        border-color: var(--accent2);
-        color: #fff;
-      }
-
-      .btn-primary-custom {
-        background: var(--accent);
-        border: none;
-        color: #fff;
-        padding: 11px 24px;
-        border-radius: var(--radius-sm);
-        font-weight: 700;
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: all 0.2s;
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        box-shadow: 0 4px 14px rgba(26, 33, 81, 0.2);
-      }
-
-      .btn-primary-custom:hover {
-        opacity: 0.9;
-        transform: translateY(-1px);
-      }
-      .btn-primary-custom:active {
-        transform: translateY(0);
-      }
-
-      .btn-outline-custom {
-        background: transparent;
-        border: 1.5px solid var(--border2);
-        color: var(--text2);
-        padding: 11px 24px;
-        border-radius: var(--radius-sm);
-        font-weight: 600;
-        font-size: 0.85rem;
-        cursor: pointer;
-        transition: all 0.2s;
-      }
-
-      .btn-outline-custom:hover {
-        border-color: var(--text);
-        color: var(--text);
-      }
-
-      /* ── Modal ──────────────────────────────────────── */
-      .modal-overlay {
-        position: fixed;
-        inset: 0;
-        background: rgba(26, 33, 81, 0.5);
-        backdrop-filter: blur(8px);
-        z-index: 2000;
-        display: none;
-        align-items: flex-end;
-        justify-content: center;
-        padding: 0;
-      }
-
-      [data-theme="dark"] .modal-overlay {
-        background: rgba(0, 0, 0, 0.75);
-      }
-
-      @media (min-width: 576px) {
-        .modal-overlay {
-          align-items: center;
-          padding: 20px;
-        }
-      }
-
-      .modal-overlay.active {
-        display: flex;
-        animation: fadeIn 0.2s ease;
-      }
-
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-
-      .modal-box {
-        background: var(--card);
-        border: 1px solid var(--border2);
-        border-radius: var(--radius) var(--radius) 0 0;
-        width: 100%;
-        max-width: 520px;
-        max-height: 90vh;
-        overflow-y: auto;
-        animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        box-shadow: var(--shadow-lg);
-      }
-
-      @media (min-width: 576px) {
-        .modal-box {
-          border-radius: var(--radius);
-          animation: scaleIn 0.25s ease;
-        }
-      }
-
-      @keyframes slideUp {
-        from {
-          transform: translateY(100%);
-        }
-        to {
-          transform: translateY(0);
-        }
-      }
-      @keyframes scaleIn {
-        from {
-          transform: scale(0.95);
-          opacity: 0;
-        }
-        to {
-          transform: scale(1);
-          opacity: 1;
-        }
-      }
-
-      .modal-header-custom {
-        padding: 20px 20px 0;
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
-      }
-
-      .modal-title-custom {
-        font-size: 1.05rem;
-        font-weight: 800;
-        color: var(--text);
-      }
-      .modal-subtitle {
-        font-size: 0.78rem;
-        color: var(--muted);
-        margin-top: 3px;
-      }
-
-      .modal-close {
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        color: var(--muted);
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-        flex-shrink: 0;
-        transition: all 0.2s;
-      }
-
-      .modal-close:hover {
-        color: var(--text);
-        background: var(--bg);
-      }
-
-      .modal-body-custom {
-        padding: 20px;
-      }
-
-      .modal-footer-custom {
-        padding: 0 20px 20px;
-        display: flex;
-        gap: 10px;
-        justify-content: flex-end;
-      }
-
-      .info-row {
-        background: var(--bg3);
-        border: 1px solid var(--border);
-        border-radius: var(--radius-sm);
-        padding: 12px 14px;
-        margin-bottom: 16px;
-        display: flex;
-        flex-wrap: wrap;
-        gap: 16px;
-      }
-
-      .info-item {
-        flex: 1;
-        min-width: 90px;
-      }
-      .info-item-label {
-        font-size: 0.65rem;
-        color: var(--muted);
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        font-weight: 700;
-      }
-      .info-item-value {
-        font-size: 0.88rem;
-        color: var(--text);
-        font-weight: 700;
-        margin-top: 3px;
-      }
-
-      .pwd-wrapper {
-        position: relative;
-      }
-      .pwd-wrapper input {
-        padding-right: 42px !important;
-      }
-
-      .pwd-toggle {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        color: var(--muted);
-        cursor: pointer;
-        font-size: 0.95rem;
-        padding: 0;
-      }
-
-      .alert-custom {
-        padding: 10px 14px;
-        border-radius: var(--radius-sm);
-        font-size: 0.82rem;
-        margin-bottom: 14px;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-      }
-
-      .alert-error {
-        background: var(--red-bg);
-        border: 1px solid rgba(255, 77, 77, 0.25);
-        color: var(--red);
-      }
-      .alert-success {
-        background: var(--green-bg);
-        border: 1px solid rgba(0, 196, 140, 0.25);
-        color: #007a58;
-      }
-
-      [data-theme="dark"] .alert-success {
-        color: #6ee7b7;
-      }
-      [data-theme="dark"] .alert-error {
-        color: #fca5a5;
-      }
-
+      /* LOADING */
+      .loading-state,
       .empty-state {
+        padding: 50px 24px;
         text-align: center;
-        padding: 48px 20px;
-        color: var(--muted);
       }
-      .empty-state i {
-        font-size: 2.5rem;
-        opacity: 0.3;
-        margin-bottom: 12px;
-        display: block;
+      .spinner {
+        width: 34px;
+        height: 34px;
+        border: 3px solid var(--stroke2);
+        border-top-color: var(--primary);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin: 0 auto 14px;
       }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+      .loading-state p,
       .empty-state p {
-        font-size: 0.85rem;
+        color: var(--text-secondary);
+        font-size: 14px;
       }
-
-      /* ── Scrollbar ──────────────────────────────────── */
+      .empty-icon {
+        font-size: 36px;
+        margin-bottom: 10px;
+      }
       ::-webkit-scrollbar {
         width: 5px;
         height: 5px;
       }
-      ::-webkit-scrollbar-track {
-        background: var(--bg2);
-      }
       ::-webkit-scrollbar-thumb {
-        background: var(--border2);
-        border-radius: 10px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-        background: var(--muted);
+        background: var(--stroke2);
+        border-radius: 3px;
       }
 
-      /* ── Toast ──────────────────────────────────────── */
-      .toast-wrap {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        z-index: 9999;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-      }
-
-      .toast-item {
-        background: var(--card);
-        border: 1px solid var(--border2);
-        border-radius: var(--radius-sm);
-        padding: 12px 16px;
-        font-size: 0.83rem;
-        color: var(--text);
-        box-shadow: var(--shadow-lg);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        animation: slideInRight 0.3s ease;
-        min-width: 240px;
-        max-width: 300px;
-      }
-
-      @keyframes slideInRight {
-        from {
-          transform: translateX(110%);
-          opacity: 0;
+      /* RESPONSIVE */
+      @media (max-width: 1100px) {
+        .cards-row {
+          grid-template-columns: repeat(2, 1fr);
         }
-        to {
+      }
+      @media (max-width: 768px) {
+        .hamburger {
+          display: flex;
+        }
+        .sidebar {
+          transform: translateX(-100%);
+        }
+        .sidebar.open {
           transform: translateX(0);
-          opacity: 1;
         }
-      }
-
-      .toast-success {
-        border-left: 3px solid var(--green);
-      }
-      .toast-error {
-        border-left: 3px solid var(--red);
-      }
-
-      @media (max-width: 575px) {
-        .main-wrap {
-          padding: 16px 12px 60px;
+        .main {
+          margin-left: 0;
+          padding: 64px 14px 20px;
+        }
+        .page-header h1 {
+          font-size: 18px;
+        }
+        .cards-row {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 10px;
+        }
+        .stat-card {
+          padding: 14px;
         }
         .stat-value {
-          font-size: 1.65rem;
+          font-size: 22px;
+        }
+        .stat-icon {
+          width: 30px;
+          height: 30px;
+          font-size: 14px;
+          margin-bottom: 8px;
+        }
+      }
+      @media (max-width: 400px) {
+        .stat-value {
+          font-size: 18px;
+        }
+        .stat-label {
+          font-size: 11px;
+        }
+        .stat-sub {
+          display: none;
         }
       }
     </style>
   </head>
   <body>
-    <div id="loadingScreen">
-      <div class="loader-ring"></div>
-      <div class="loader-text">Loading Dashboard</div>
-    </div>
+    <button class="hamburger" id="hamburger">
+      <span></span><span></span><span></span>
+    </button>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <!-- Navbar -->
-    <nav class="navbar">
-      <div class="container-fluid px-3 px-md-4">
-        <a class="navbar-brand" href="#">
-          <div class="brand-icon"><i class="bi bi-building-check"></i></div>
-          <div>
-            BankBenchers<span class="brand-sub">Attendance System</span>
-          </div>
-        </a>
-        <div class="d-flex align-items-center gap-2">
-          <span class="chip-live">
-            <i class="bi bi-circle-fill" style="font-size: 0.45rem"></i> Live
-          </span>
-          <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">
-            <i class="bi bi-moon-stars-fill" id="themeIcon"></i>
-            <span id="themeLabel">Dark</span>
-          </button>
-        </div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">
+        <h2>📋 Attendance</h2>
+        <p>Dashboard</p>
       </div>
-    </nav>
-
-    <!-- Main -->
-    <div class="main-wrap">
-      <!-- Header -->
-      <div class="mb-4">
-        <div class="page-title">Attendance Dashboard</div>
-        <div class="page-subtitle" id="lastUpdated">Loading data...</div>
-      </div>
-
-      <!-- Filters -->
-      <div class="filter-card">
-        <div class="row g-3">
-          <div class="col-12 col-md-5">
-            <label class="filter-label"
-              ><i class="bi bi-person me-1"></i>Employee</label
-            >
-            <select class="form-select" id="empFilter">
+      <div class="sidebar-section">
+        <div class="sidebar-section-label">Filters</div>
+        <div class="filter-group">
+          <label class="filter-label">Employee</label>
+          <div class="select-wrapper">
+            <select class="filter-select" id="emp-filter">
               <option value="">All Employees</option>
             </select>
           </div>
-          <div class="col-6 col-md-3">
-            <label class="filter-label"
-              ><i class="bi bi-calendar3 me-1"></i>Year</label
-            >
-            <select class="form-select" id="yearFilter">
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Year</label>
+          <div class="select-wrapper">
+            <select class="filter-select" id="year-filter">
               <option value="">All Years</option>
             </select>
           </div>
-          <div class="col-6 col-md-4">
-            <label class="filter-label"
-              ><i class="bi bi-calendar-month me-1"></i>Month</label
-            >
-            <select class="form-select" id="monthFilter">
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Month</label>
+          <div class="select-wrapper">
+            <select class="filter-select" id="month-filter">
               <option value="">All Months</option>
-              <option value="1">January</option>
-              <option value="2">February</option>
-              <option value="3">March</option>
-              <option value="4">April</option>
-              <option value="5">May</option>
-              <option value="6">June</option>
-              <option value="7">July</option>
-              <option value="8">August</option>
-              <option value="9">September</option>
+              <option value="01">January</option>
+              <option value="02">February</option>
+              <option value="03">March</option>
+              <option value="04">April</option>
+              <option value="05">May</option>
+              <option value="06">June</option>
+              <option value="07">July</option>
+              <option value="08">August</option>
+              <option value="09">September</option>
               <option value="10">October</option>
               <option value="11">November</option>
               <option value="12">December</option>
             </select>
           </div>
         </div>
-        <div class="row g-3 mt-2 align-items-end">
-          <div class="col-6">
-            <button type="button" class="btn btn-primary w-100" id="todayBtn">
-              <i class="bi bi-calendar-check me-1"></i>Today
-            </button>
-          </div>
-          <div class="col-6">
-            <label class="filter-label"
-              ><i class="bi bi-calendar-day me-1"></i>Specific Date</label
-            >
-            <input type="date" class="form-control" id="dateFilter" />
-          </div>
+        <div class="filter-group">
+          <label class="filter-label">Specific Date</label>
+          <input type="date" class="filter-input" id="date-filter" />
         </div>
+        <button class="clear-btn" id="clear-btn">✕ Clear Filters</button>
+      </div>
+      <div class="sidebar-footer">
+        <div class="last-refresh" id="last-refresh">Loading...</div>
+        <button class="refresh-btn" id="refresh-btn">↻ Refresh Data</button>
+      </div>
+    </aside>
+
+    <main class="main">
+      <div class="page-header">
+        <h1>Attendance Dashboard</h1>
+        <p>Real-time employee attendance tracking</p>
+        <span id="active-filter-label">Today</span>
       </div>
 
-      <!-- Stat Cards -->
-      <div class="stats-grid">
+      <div class="cards-row">
         <div class="stat-card present">
-          <div class="stat-icon"><i class="bi bi-check-circle-fill"></i></div>
-          <div class="stat-value" id="countPresent">—</div>
+          <div class="stat-icon">✅</div>
+          <div class="stat-value" id="count-present">—</div>
           <div class="stat-label">Present</div>
+          <div class="stat-sub" id="sub-present">Loading...</div>
         </div>
         <div class="stat-card absent">
-          <div class="stat-icon"><i class="bi bi-x-circle-fill"></i></div>
-          <div class="stat-value" id="countAbsent">—</div>
+          <div class="stat-icon">❌</div>
+          <div class="stat-value" id="count-absent">—</div>
           <div class="stat-label">Absent</div>
+          <div class="stat-sub" id="sub-absent">Loading...</div>
         </div>
         <div class="stat-card halfday">
-          <div class="stat-icon"><i class="bi bi-clock-fill"></i></div>
-          <div class="stat-value" id="countHalfDay">—</div>
+          <div class="stat-icon">🌗</div>
+          <div class="stat-value" id="count-halfday">—</div>
           <div class="stat-label">Half Day</div>
+          <div class="stat-sub" id="sub-halfday">Loading...</div>
         </div>
-        <div class="stat-card latehours">
-          <div class="stat-icon"><i class="bi bi-hourglass-split"></i></div>
-          <div class="stat-value" id="countLate">—</div>
-          <div class="stat-label">Total Late</div>
-        </div>
-      </div>
-
-      <!-- Section Header -->
-      <div class="section-header">
-        <div class="section-title">
-          <span class="dot"></span>Attendance Logs
-        </div>
-        <span class="records-chip" id="logCount"
-          ><i class="bi bi-list-ul"></i> 0 records</span
-        >
-      </div>
-
-      <!-- DESKTOP TABLE -->
-      <div class="desktop-table">
-        <div class="table-card">
-          <div class="table-responsive">
-            <table class="logs-table">
-              <thead>
-                <tr>
-                  <th>Employee</th>
-                  <th>Date</th>
-                  <th>Punch In</th>
-                  <th>Punch Out</th>
-                  <th>Hours</th>
-                  <th>Status</th>
-                  <th>Late By</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="logsTableBody">
-                <tr>
-                  <td colspan="8">
-                    <div class="empty-state">
-                      <i class="bi bi-inbox"></i>
-                      <p>Loading records...</p>
-                    </div>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+        <div class="stat-card late">
+          <div class="stat-icon">⏰</div>
+          <div class="stat-value" id="count-late">—</div>
+          <div class="stat-label">Total Late Time</div>
+          <div class="stat-sub" id="sub-late">Loading...</div>
         </div>
       </div>
 
-      <!-- MOBILE CARDS -->
-      <div class="mobile-cards">
-        <div class="attendance-cards" id="mobileCards">
-          <div class="empty-state">
-            <i class="bi bi-inbox"></i>
-            <p>Loading records...</p>
-          </div>
+      <div class="table-section">
+        <div class="table-header">
+          <div class="table-title">Attendance Log</div>
+          <div class="table-count" id="row-count">Loading...</div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Date</th>
+                <th>Punch In</th>
+                <th>Punch Out</th>
+                <th>Status</th>
+                <th>Late By</th>
+              </tr>
+            </thead>
+            <tbody id="table-body">
+              <tr>
+                <td colspan="6">
+                  <div class="loading-state">
+                    <div class="spinner"></div>
+                    <p>Fetching attendance data...</p>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
-    </div>
-    <!-- /main-wrap -->
-
-    <!-- Edit Modal -->
-    <div class="modal-overlay" id="editModal">
-      <div class="modal-box">
-        <div class="modal-header-custom">
-          <div>
-            <div class="modal-title-custom">
-              <i class="bi bi-pencil-square me-2"></i>Edit Attendance
-            </div>
-            <div class="modal-subtitle">Manager access required</div>
-          </div>
-          <button class="modal-close" onclick="closeModal()">
-            <i class="bi bi-x"></i>
-          </button>
-        </div>
-        <div class="modal-body-custom">
-          <div class="info-row">
-            <div class="info-item">
-              <div class="info-item-label">Employee</div>
-              <div class="info-item-value" id="editEmpName">—</div>
-            </div>
-            <div class="info-item">
-              <div class="info-item-label">Date</div>
-              <div class="info-item-value" id="editDate">—</div>
-            </div>
-            <div class="info-item">
-              <div class="info-item-label">Status</div>
-              <div class="info-item-value" id="editStatus">—</div>
-            </div>
-          </div>
-          <div id="modalAlert" style="display: none"></div>
-          <div class="mb-3" id="pwdSection">
-            <label class="filter-label"
-              ><i class="bi bi-shield-lock me-1"></i>Manager Password</label
-            >
-            <div class="pwd-wrapper">
-              <input
-                type="password"
-                class="form-control"
-                id="managerPwd"
-                placeholder="Enter manager password..."
-              />
-              <button class="pwd-toggle" onclick="togglePwd()">
-                <i class="bi bi-eye" id="eyeIcon"></i>
-              </button>
-            </div>
-          </div>
-          <div id="timeInputs" style="display: none">
-            <div class="row g-3">
-              <div class="col-6">
-                <label class="filter-label"
-                  ><i class="bi bi-box-arrow-in-right me-1"></i>Punch In</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="editPunchIn"
-                  placeholder="e.g. 09:33:33 AM"
-                />
-              </div>
-              <div class="col-6">
-                <label class="filter-label"
-                  ><i class="bi bi-box-arrow-right me-1"></i>Punch Out</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="editPunchOut"
-                  placeholder="e.g. 06:33:53 PM"
-                />
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="modal-footer-custom">
-          <button class="btn-outline-custom" onclick="closeModal()">
-            Cancel
-          </button>
-          <button
-            class="btn-primary-custom"
-            id="modalActionBtn"
-            onclick="handleModalAction()"
-          >
-            <i class="bi bi-shield-check"></i> Verify Password
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div class="toast-wrap" id="toastWrap"></div>
+    </main>
 
     <script>
-      // ── CONFIG ──────────────────────────────────────────────────
-      //   const APPS_SCRIPT_URL =
-      //     "https://script.google.com/macros/s/AKfycbxxFtRVqToXh4B0F_9AIUDzpcR5Enw0Tx7gt-8pLWv-QmJRityJ9o0BkpXhNuOsfQ1RUQ/exec";
-
-      const APPS_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbwF0rjiKNUL8k8AePp7_Xlsfx7-syTDiz9MziR5KQs0XTn8KogPeNkR8HfBuWrO_QCV/exec";
+      const SHEET_ID = "1FoAHnlhikIn-d2xFGwaOu982J0RYhjEtih3NrNix8t8";
+      const ATTENDANCE_SHEET = "Attendance";
+      const USERS_SHEET = "Users";
 
       const HOLIDAYS = new Set([
         "2026-01-14",
@@ -1401,613 +700,435 @@
         "2026-12-25",
       ]);
 
-      // ── State ───────────────────────────────────────────────────
-      let allUsers = [],
-        allAttendance = [];
-      let currentEditRow = null,
-        isUnlocked = false;
-      let userMap = new Map(),
-        dateCache = new Map();
-      const $ = (id) => document.getElementById(id);
+      let allAttendance = [],
+        allUsers = [];
 
-      // ── Theme Toggle ────────────────────────────────────────────
-      function toggleTheme() {
-        const html = document.documentElement;
-        const isDark = html.getAttribute("data-theme") === "dark";
-        html.setAttribute("data-theme", isDark ? "light" : "dark");
-        $("themeIcon").className = isDark
-          ? "bi bi-moon-stars-fill"
-          : "bi bi-sun-fill";
-        $("themeLabel").textContent = isDark ? "Dark" : "Light";
-        localStorage.setItem("bb-theme", isDark ? "light" : "dark");
+      /* ── date utils ── */
+      function toISO(d) {
+        return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+      }
+      function pad(n) {
+        return String(n).padStart(2, "0");
       }
 
-      // Restore saved theme
-      (function () {
-        const saved = localStorage.getItem("bb-theme");
-        if (saved === "dark") {
-          document.documentElement.setAttribute("data-theme", "dark");
-          setTimeout(() => {
-            $("themeIcon").className = "bi bi-sun-fill";
-            $("themeLabel").textContent = "Light";
-          }, 0);
+      function isWorkingDay(d) {
+        if (!d) return false;
+        const day = d.getDay();
+        if (day === 0 || day === 6) return false;
+        return !HOLIDAYS.has(toISO(d));
+      }
+
+      function workingDaysBetween(from, to) {
+        const days = [],
+          cur = new Date(from);
+        cur.setHours(0, 0, 0, 0);
+        const end = new Date(to);
+        end.setHours(23, 59, 59, 999);
+        while (cur <= end) {
+          if (isWorkingDay(cur)) days.push(toISO(new Date(cur)));
+          cur.setDate(cur.getDate() + 1);
         }
-      })();
+        return days;
+      }
 
-      // ── Init ────────────────────────────────────────────────────
-      window.addEventListener("DOMContentLoaded", async () => {
-        await loadData();
-        setupFilters();
-        applyFilters();
-        hideLoading();
-      });
-
-      // ── Load Data ───────────────────────────────────────────────
-      async function loadData() {
-        try {
-          const [uRes, aRes] = await Promise.all([
-            fetch(`${APPS_SCRIPT_URL}?action=getUsers`),
-            fetch(`${APPS_SCRIPT_URL}?action=getAttendance`),
-          ]);
-          const uData = await uRes.json();
-          const aData = await aRes.json();
-          allUsers = uData.users || [];
-          allAttendance = aData.records || [];
-          allUsers.forEach((u) =>
-            userMap.set(u["Employee ID"], u["Employee Name"]),
-          );
-          $("lastUpdated").textContent =
-            `Last updated: ${new Date().toLocaleString("en-IN")} • ${allAttendance.length} records`;
-          populateEmployeeFilter();
-          populateYearFilter();
-        } catch (e) {
-          console.error(e);
-          $("lastUpdated").textContent = "⚠ Could not connect to server.";
-          hideLoading();
+      function parseDate(raw) {
+        if (!raw) return null;
+        if (typeof raw === "string" && raw.startsWith("Date(")) {
+          const p = raw.slice(5, -1).split(",").map(Number);
+          return new Date(p[0], p[1], p[2]);
         }
-      }
-
-      function populateEmployeeFilter() {
-        const sel = $("empFilter");
-        allUsers.forEach((u) => {
-          if (!u["Employee ID"] || u["Employee ID"] == 1) return;
-          const opt = document.createElement("option");
-          opt.value = u["Employee ID"];
-          opt.textContent = `${u["Employee ID"]} — ${u["Employee Name"]}`;
-          sel.appendChild(opt);
-        });
-      }
-
-      function populateYearFilter() {
-        const years = new Set();
-        allAttendance.forEach((r) => {
-          const d = parseDateStr(r["Date"]);
-          if (d) years.add(d.getFullYear());
-        });
-        const sel = $("yearFilter");
-        [...years]
-          .sort((a, b) => b - a)
-          .forEach((y) => {
-            const opt = document.createElement("option");
-            opt.value = y;
-            opt.textContent = y;
-            sel.appendChild(opt);
-          });
-        if (years.has(new Date().getFullYear()))
-          sel.value = new Date().getFullYear();
-      }
-
-      function setupFilters() {
-        ["empFilter", "yearFilter", "monthFilter"].forEach((id) =>
-          $(id).addEventListener("change", applyFilters),
-        );
-        $("monthFilter").value = new Date().getMonth() + 1;
-        $("dateFilter").addEventListener("change", applyFilters);
-        $("todayBtn").addEventListener("click", () => {
-          const today = new Date();
-          const yyyy = today.getFullYear();
-          const mm = String(today.getMonth() + 1).padStart(2, "0");
-          const dd = String(today.getDate()).padStart(2, "0");
-          $("dateFilter").value = `${yyyy}-${mm}-${dd}`;
-          $("empFilter").value = "";
-          $("yearFilter").value = "";
-          $("monthFilter").value = "";
-          applyFilters();
-        });
-      }
-
-      // ── Apply Filters ───────────────────────────────────────────
-      function applyFilters() {
-        const empId = $("empFilter").value;
-        const year = parseInt($("yearFilter").value) || null;
-        const month = parseInt($("monthFilter").value) || null;
-        const dateFilter = $("dateFilter").value; // YYYY-MM-DD
-
-        const filtered = allAttendance.filter((r) => {
-          if (empId && r["Employee ID"] !== empId) return false;
-          const d = parseDateStr(r["Date"]);
-          if (!d) return false;
-          if (dateFilter) {
-            const filterDate = new Date(dateFilter);
-            if (d.toDateString() !== filterDate.toDateString()) return false;
-          } else {
-            if (year && d.getFullYear() !== year) return false;
-            if (month && d.getMonth() + 1 !== month) return false;
+        if (typeof raw === "string") {
+          const dmy = raw.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+          if (dmy) {
+            const yr =
+              dmy[3].length === 2 ? 2000 + parseInt(dmy[3]) : parseInt(dmy[3]);
+            return new Date(yr, parseInt(dmy[2]) - 1, parseInt(dmy[1]));
           }
-          return true;
-        });
-
-        let present = 0,
-          halfDay = 0,
-          totalLateMinutes = 0,
-          absent = 0;
-        if (dateFilter) {
-          // For specific date, count based on filtered records
-          filtered.forEach((r) => {
-            const s = (r["Mark Status"] || "").toString().trim().toUpperCase();
-            if (s === "P") present++;
-            if (s === "HD") halfDay++;
-            totalLateMinutes += lateByToMinutes(r["Late By"]);
-          });
-          const filterDate = new Date(dateFilter);
-          const employees = empId
-            ? allUsers.filter((u) => u["Employee ID"] === empId)
-            : allUsers.filter((u) => u["Employee ID"] && u["Employee ID"] != 1);
-          absent = employees.filter((emp) => {
-            const hasRecord = filtered.some(
-              (r) => r["Employee ID"] === emp["Employee ID"],
+          const iso = raw.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+          if (iso)
+            return new Date(
+              parseInt(iso[1]),
+              parseInt(iso[2]) - 1,
+              parseInt(iso[3]),
             );
-            if (hasRecord) return false;
-            const dow = filterDate.getDay();
-            const key = fmtKey(filterDate);
-            const doj = emp["DOJ"]
-              ? parseSheetDate(emp["DOJ"].toString())
-              : null;
-            return (
-              dow !== 0 &&
-              dow !== 6 &&
-              !HOLIDAYS.has(key) &&
-              !(doj && filterDate < doj)
-            );
-          }).length;
-        } else {
-          // Existing logic for year/month
-          filtered.forEach((r) => {
-            const s = (r["Mark Status"] || "").toString().trim().toUpperCase();
-            if (s === "P") present++;
-            if (s === "HD") halfDay++;
-            totalLateMinutes += lateByToMinutes(r["Late By"]);
-          });
-          absent = calcAbsent(empId, year, month);
+          const d = new Date(raw);
+          if (!isNaN(d.getTime())) return d;
         }
-
-        animateCount($("countPresent"), present);
-        animateCount($("countAbsent"), absent);
-        animateCount($("countHalfDay"), halfDay);
-        $("countLate").textContent = minutesToDisplay(totalLateMinutes);
-        $("logCount").innerHTML =
-          `<i class="bi bi-list-ul"></i> ${filtered.length} records`;
-
-        // Sort
-        filtered.sort(
-          (a, b) =>
-            (parseDateStr(b["Date"]) || 0) - (parseDateStr(a["Date"]) || 0),
-        );
-
-        renderDesktopTable(filtered);
-        renderMobileCards(filtered);
-      }
-
-      // ── Desktop Table ───────────────────────────────────────────
-      function renderDesktopTable(records) {
-        if (!records.length) {
-          $("logsTableBody").innerHTML =
-            `<tr><td colspan="8"><div class="empty-state">
-            <i class="bi bi-inbox"></i><p>No records found</p></div></td></tr>`;
-          return;
-        }
-
-        $("logsTableBody").innerHTML = records
-          .map((r) => {
-            const status = (r["Mark Status"] || "")
-              .toString()
-              .trim()
-              .toUpperCase();
-            const empName = userMap.get(r["Employee ID"]) || r["Employee ID"];
-            const lateMin = lateByToMinutes(r["Late By"]);
-            const lateDisp = minutesToDisplay(lateMin);
-            const lateClass =
-              lateMin === 0
-                ? "late-zero"
-                : lateMin < 60
-                  ? "late-low"
-                  : "late-high";
-            const rowIdx = allAttendance.indexOf(r);
-            const badge = getBadge(status);
-
-            return `<tr>
-            <td class="emp-name">${empName}</td>
-            <td>${formatDateDDMMYY(r["Date"])}</td>
-            <td>${r["PunchIn"] || "—"}</td>
-            <td>${r["PunchOut"] || "—"}</td>
-            <td>${r["Difference"] || "—"}</td>
-            <td>${badge}</td>
-            <td class="${lateClass}">${lateDisp}</td>
-            <td><button class="btn-edit" onclick='openEditModal(${JSON.stringify(r)},${rowIdx})'>
-              <i class="bi bi-pencil"></i> Edit
-            </button></td>
-          </tr>`;
-          })
-          .join("");
-      }
-
-      // ── Mobile Cards ────────────────────────────────────────────
-      function renderMobileCards(records) {
-        const container = $("mobileCards");
-
-        if (!records.length) {
-          container.innerHTML = `<div class="empty-state">
-            <i class="bi bi-inbox"></i><p>No records found</p></div>`;
-          return;
-        }
-
-        container.innerHTML = records
-          .map((r) => {
-            const status = (r["Mark Status"] || "")
-              .toString()
-              .trim()
-              .toUpperCase();
-            const empName = userMap.get(r["Employee ID"]) || r["Employee ID"];
-            const lateMin = lateByToMinutes(r["Late By"]);
-            const lateDisp = minutesToDisplay(lateMin);
-            const lateChipClass =
-              lateMin === 0
-                ? "late-zero"
-                : lateMin < 60
-                  ? "late-low"
-                  : "late-high";
-            const rowIdx = allAttendance.indexOf(r);
-            const badge = getBadge(status);
-            const statusClass =
-              status === "P"
-                ? "status-p"
-                : status === "HD"
-                  ? "status-hd"
-                  : "status-a";
-
-            return `<div class="att-card ${statusClass}">
-            <!-- Header: Name + Date -->
-            <div class="att-card-header">
-              <div class="att-card-emp">${empName}</div>
-              <div class="att-card-date">${formatDateDDMMYY(r["Date"])}</div>
-            </div>
-
-            <!-- Times: Punch In | Punch Out | Hours -->
-            <div class="att-card-times">
-              <div class="att-time-item">
-                <div class="att-time-label">Punch In</div>
-                <div class="att-time-value">${r["PunchIn"] || "—"}</div>
-              </div>
-              <div class="att-time-item">
-                <div class="att-time-label">Punch Out</div>
-                <div class="att-time-value">${r["PunchOut"] || "—"}</div>
-              </div>
-              <div class="att-time-item">
-                <div class="att-time-label">Hours</div>
-                <div class="att-time-value">${r["Difference"] || "—"}</div>
-              </div>
-            </div>
-
-            <!-- Footer: Status + Late + Edit -->
-            <div class="att-card-footer">
-              <div class="att-footer-left">
-                ${badge}
-                <span class="late-chip ${lateChipClass}">
-                  <i class="bi bi-clock"></i> ${lateDisp}
-                </span>
-              </div>
-              <button class="btn-edit" onclick='openEditModal(${JSON.stringify(r)},${rowIdx})'>
-                <i class="bi bi-pencil"></i> Edit
-              </button>
-            </div>
-          </div>`;
-          })
-          .join("");
-      }
-
-      // ── Badge Helper ────────────────────────────────────────────
-      function getBadge(status) {
-        if (status === "P")
-          return `<span class="badge-status badge-p"><i class="bi bi-check2"></i>Present</span>`;
-        if (status === "HD")
-          return `<span class="badge-status badge-hd"><i class="bi bi-clock"></i>Half Day</span>`;
-        return `<span class="badge-status badge-a"><i class="bi bi-x"></i>Absent</span>`;
-      }
-
-      // ══════════════════════════════════════════════════════════
-      //  LATE BY HELPERS
-      // ══════════════════════════════════════════════════════════
-      function lateByToMinutes(val) {
-        if (val === null || val === undefined || val === "") return 0;
-        const str = val.toString().trim();
-        if (!str || str === "0") return 0;
-
-        // HH:MM:SS
-        const colonMatch = str.match(/^(\d{1,3}):(\d{2})(?::(\d{2}))?$/);
-        if (colonMatch) {
-          return (
-            (parseInt(colonMatch[1]) || 0) * 60 + (parseInt(colonMatch[2]) || 0)
-          );
-        }
-
-        // Excel decimal
-        if (!isNaN(str) && !str.includes("/") && !str.includes(":")) {
-          const num = parseFloat(str);
-          if (num > 0 && num < 1) return Math.round(num * 1440);
-          if (num >= 1) return Math.floor(num / 60);
-        }
-
-        // Datetime string
-        const dtMatch = str.match(/(\d{1,2}):(\d{2}):(\d{2})\s*(AM|PM)?/i);
-        if (dtMatch) {
-          let h = parseInt(dtMatch[1]) || 0;
-          const m = parseInt(dtMatch[2]) || 0;
-          const ampm = dtMatch[4] ? dtMatch[4].toUpperCase() : null;
-          if (ampm === "PM" && h !== 12) h += 12;
-          if (ampm === "AM" && h === 12) h = 0;
-          return h * 60 + m;
-        }
-
-        return 0;
-      }
-
-      function minutesToDisplay(totalMinutes) {
-        if (!totalMinutes || totalMinutes <= 0) return "0 min";
-        const h = Math.floor(totalMinutes / 60);
-        const m = totalMinutes % 60;
-        if (h === 0) return `${m} min`;
-        if (m === 0) return `${h} hr`;
-        return `${h} hr ${m} min`;
-      }
-
-      // ── Absent Calculation ──────────────────────────────────────
-      function calcAbsent(empId, year, month) {
-        const today = new Date();
-        today.setHours(0, 0, 0, 0);
-        const employees = empId
-          ? allUsers.filter((u) => u["Employee ID"] === empId)
-          : allUsers.filter((u) => u["Employee ID"] && u["Employee ID"] != 1);
-
-        let total = 0;
-        employees.forEach((emp) => {
-          const doj = emp["DOJ"] ? parseSheetDate(emp["DOJ"].toString()) : null;
-          const presentDates = new Set(
-            allAttendance
-              .filter((r) => r["Employee ID"] === emp["Employee ID"])
-              .map((r) => {
-                const d = parseDateStr(r["Date"]);
-                return d ? fmtKey(d) : null;
-              })
-              .filter(Boolean),
-          );
-          const sy = year || new Date().getFullYear(),
-            sm = month || 1;
-          const ey = year || new Date().getFullYear(),
-            em = month || 12;
-          let cursor = new Date(sy, sm - 1, 1);
-          const rangeEnd = new Date(ey, em, 0);
-          while (cursor <= rangeEnd && cursor <= today) {
-            const dow = cursor.getDay(),
-              key = fmtKey(cursor);
-            if (
-              dow !== 0 &&
-              dow !== 6 &&
-              !HOLIDAYS.has(key) &&
-              !(doj && cursor < doj) &&
-              !presentDates.has(key)
-            )
-              total++;
-            cursor.setDate(cursor.getDate() + 1);
-          }
-        });
-        return total;
-      }
-
-      // ── Edit Modal ──────────────────────────────────────────────
-      function openEditModal(record, rowIdx) {
-        currentEditRow = { record, rowIdx };
-        isUnlocked = false;
-        $("editEmpName").textContent =
-          userMap.get(record["Employee ID"]) || record["Employee ID"];
-        $("editDate").textContent = record["Date"] || "—";
-        $("editStatus").textContent = record["Mark Status"] || "—";
-        $("managerPwd").value = "";
-        $("timeInputs").style.display = "none";
-        $("pwdSection").style.display = "block";
-        $("modalActionBtn").innerHTML =
-          '<i class="bi bi-shield-check"></i> Verify Password';
-        $("editPunchIn").value = record["PunchIn"] || "";
-        $("editPunchOut").value = record["PunchOut"] || "";
-        hideModalAlert();
-        $("editModal").classList.add("active");
-      }
-
-      function closeModal() {
-        $("editModal").classList.remove("active");
-        currentEditRow = null;
-        isUnlocked = false;
-      }
-
-      function handleModalAction() {
-        if (!isUnlocked) verifyPassword();
-        else saveEdit();
-      }
-
-      function verifyPassword() {
-        const pwd = $("managerPwd").value;
-        if (!pwd) {
-          showModalAlert("Please enter the manager password.", "error");
-          return;
-        }
-        if (pwd === "333") {
-          isUnlocked = true;
-          $("pwdSection").style.display = "none";
-          $("timeInputs").style.display = "block";
-          $("modalActionBtn").innerHTML =
-            '<i class="bi bi-check-circle"></i> Save Changes';
-          hideModalAlert();
-          showModalAlert(
-            "✓ Access granted. You can now edit the times.",
-            "success",
-          );
-        } else {
-          showModalAlert("Incorrect password. Access denied.", "error");
-          $("managerPwd").value = "";
-        }
-      }
-
-      async function saveEdit() {
-        const punchIn = $("editPunchIn").value.trim();
-        const punchOut = $("editPunchOut").value.trim();
-        if (!punchIn || !punchOut) {
-          showModalAlert(
-            "Please fill both Punch In and Punch Out times.",
-            "error",
-          );
-          return;
-        }
-
-        const btn = $("modalActionBtn");
-        btn.innerHTML = '<i class="bi bi-hourglass-split"></i> Saving...';
-        btn.disabled = true;
-
-        try {
-          const res = await fetch(APPS_SCRIPT_URL, {
-            method: "POST",
-            body: JSON.stringify({
-              action: "editAttendance",
-              password: "333",
-              rowIndex: currentEditRow.rowIdx + 1,
-              punchIn,
-              punchOut,
-            }),
-          });
-          const data = await res.json();
-          if (data.success) {
-            const rec = allAttendance[currentEditRow.rowIdx];
-            if (rec) {
-              rec["PunchIn"] = punchIn;
-              rec["PunchOut"] = punchOut;
-            }
-            closeModal();
-            applyFilters();
-            showToast("Attendance updated successfully!", "success");
-          } else {
-            showModalAlert(data.error || "Update failed.", "error");
-          }
-        } catch (e) {
-          showModalAlert("Network error. Please try again.", "error");
-        } finally {
-          btn.innerHTML = '<i class="bi bi-check-circle"></i> Save Changes';
-          btn.disabled = false;
-        }
-      }
-
-      // ── Utilities ───────────────────────────────────────────────
-      function parseDateStr(str) {
-        if (!str) return null;
-        if (dateCache.has(str)) return dateCache.get(str);
-        const p = str.toString().split("/");
-        let result = null;
-        if (p.length === 3) {
-          const y = p[2].length === 2 ? 2000 + parseInt(p[2]) : parseInt(p[2]);
-          const part1 = parseInt(p[0]);
-          const part2 = parseInt(p[1]);
-
-          // Support both MM/DD/YYYY (source style) and DD/MM/YYYY (display style).
-          // If first part is > 12, assume it's the day.
-          const month = part1 > 12 ? part2 : part1;
-          const day = part1 > 12 ? part1 : part2;
-
-          result = new Date(y, month - 1, day);
-        }
-        dateCache.set(str, result);
-        return result;
-      }
-
-      function parseSheetDate(val) {
-        if (!val) return null;
-        const p = val.split("-");
-        if (p.length === 3)
-          return new Date(parseInt(p[2]), parseInt(p[1]) - 1, parseInt(p[0]));
+        if (typeof raw === "number")
+          return new Date(Math.round((raw - 25569) * 86400 * 1000));
         return null;
       }
 
-      function fmtKey(d) {
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      function fmtDate(d) {
+        if (!d) return "—";
+        return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${String(d.getFullYear()).slice(-2)}`;
       }
 
-      function formatDateDDMMYY(str) {
-        if (!str) return "—";
-        const p = str.toString().split("/");
-        if (p.length === 3) return `${p[1]}/${p[0]}/${p[2]}`;
-        return str;
-      }
-
-      function animateCount(el, target) {
-        const start = parseInt(el.textContent) || 0,
-          dur = 600,
-          t0 = performance.now();
-        function step(now) {
-          const p = Math.min((now - t0) / dur, 1),
-            ease = 1 - Math.pow(1 - p, 3);
-          el.textContent = Math.round(start + (target - start) * ease);
-          if (p < 1) requestAnimationFrame(step);
+      function parseTime(cell) {
+        // Try formatted string first
+        const fmt =
+          cell && typeof cell === "object" ? String(cell.f || "").trim() : "";
+        if (fmt && fmt !== "-") return fmt;
+        const raw = cell && typeof cell === "object" ? cell.v : cell;
+        if (!raw && raw !== 0) return "—";
+        if (typeof raw === "number") {
+          const sec = Math.round(raw * 86400),
+            h = Math.floor(sec / 3600),
+            m = Math.floor((sec % 3600) / 60),
+            s = sec % 60;
+          const ap = h >= 12 ? "PM" : "AM",
+            hh = h % 12 === 0 ? 12 : h % 12;
+          return `${pad(hh)}:${pad(m)}:${pad(s)} ${ap}`;
         }
-        requestAnimationFrame(step);
+        const str = String(raw).trim();
+        return str === "" || str === "-" ? "—" : str;
       }
 
-      function showModalAlert(msg, type) {
-        const el = $("modalAlert");
-        el.style.display = "flex";
-        el.className = `alert-custom alert-${type}`;
-        el.innerHTML = `<i class="bi bi-${type === "error" ? "exclamation-circle" : "check-circle"}"></i> ${msg}`;
+      function parseLateToSec(cell) {
+        // cell is {v, f} object from fetchSheet
+        // Try formatted string first (e.g. "0:15:44" or "00:15:44")
+        const formatted =
+          cell && typeof cell === "object"
+            ? String(cell.f || "").trim()
+            : String(cell || "").trim();
+        if (
+          formatted &&
+          formatted !== "-" &&
+          formatted !== "0:00:00" &&
+          formatted !== "00:00:00"
+        ) {
+          const p = formatted.split(":").map(Number);
+          if (p.length >= 2 && !p.some(isNaN)) {
+            const sec = (p[0] || 0) * 3600 + (p[1] || 0) * 60 + (p[2] || 0);
+            if (sec > 0) return sec;
+          }
+        }
+        // Fall back to raw decimal value
+        const raw = cell && typeof cell === "object" ? cell.v : cell;
+        if (!raw && raw !== 0) return 0;
+        if (typeof raw === "number")
+          return Math.max(0, Math.round(raw * 86400));
+        const str = String(raw).trim();
+        if (!str || str === "-" || str === "00:00:00") return 0;
+        const p = str.split(":").map(Number);
+        return (p[0] || 0) * 3600 + (p[1] || 0) * 60 + (p[2] || 0);
       }
 
-      function hideModalAlert() {
-        $("modalAlert").style.display = "none";
+      function secToHMS(sec) {
+        const h = Math.floor(sec / 3600),
+          m = Math.floor((sec % 3600) / 60),
+          s = sec % 60;
+        return `${pad(h)}:${pad(m)}:${pad(s)}`;
       }
 
-      function togglePwd() {
-        const inp = $("managerPwd"),
-          ico = $("eyeIcon");
-        if (inp.type === "password") {
-          inp.type = "text";
-          ico.className = "bi bi-eye-slash";
+      /* ── sheet fetch ──
+   Returns rows of {v,f} cell objects.
+   v = raw value (number for time/date/duration)
+   f = formatted string Google renders (e.g. "0:15:44" for Late By)
+*/
+      async function fetchSheet(name) {
+        const res = await fetch(
+          `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(name)}`,
+        );
+        const text = await res.text();
+        const json = JSON.parse(text.substring(47).slice(0, -2));
+        return json.table.rows.map((row) =>
+          row.c.map((cell) =>
+            cell ? { v: cell.v ?? "", f: cell.f ?? "" } : { v: "", f: "" },
+          ),
+        );
+      }
+      function cv(c) {
+        return c && typeof c === "object" ? c.v : c;
+      }
+      function cf(c) {
+        return c && typeof c === "object" ? String(c.f || "") : String(c || "");
+      }
+
+      /* ── load ── */
+      async function loadData() {
+        document.getElementById("table-body").innerHTML =
+          '<tr><td colspan="6"><div class="loading-state"><div class="spinner"></div><p>Fetching data...</p></div></td></tr>';
+        try {
+          const [attRows, userRows] = await Promise.all([
+            fetchSheet(ATTENDANCE_SHEET),
+            fetchSheet(USERS_SHEET),
+          ]);
+
+          allUsers = userRows
+            .slice(1)
+            .map((r) => ({
+              id: String(cv(r[0]) || "").trim(),
+              name: String(cv(r[2]) || "").trim(),
+            }))
+            .filter((u) => u.id && u.name);
+
+          allAttendance = attRows
+            .slice(1)
+            .map((r) => {
+              const dateObj = parseDate(cv(r[1]));
+              const lateSec = parseLateToSec(r[10]);
+              return {
+                empId: String(cv(r[0]) || "").trim(),
+                dateObj,
+                dateStr: fmtDate(dateObj),
+                isoDate: dateObj ? toISO(dateObj) : "",
+                yy: dateObj ? String(dateObj.getFullYear()).slice(-2) : null,
+                mm: dateObj ? pad(dateObj.getMonth() + 1) : null,
+                punchIn: parseTime(r[2]),
+                punchOut: parseTime(r[3]),
+                empName: String(cv(r[5]) || "").trim(),
+                status: String(cv(r[8]) || "")
+                  .trim()
+                  .toUpperCase(),
+                lateSec,
+                lateStr: lateSec > 0 ? secToHMS(lateSec) : "—",
+              };
+            })
+            .filter((r) => r.empId && r.dateObj);
+
+          // employee dropdown
+          const empSel = document.getElementById("emp-filter");
+          empSel.innerHTML = '<option value="">All Employees</option>';
+          [...new Set(allAttendance.map((r) => r.empName))]
+            .sort()
+            .forEach((n) => {
+              const o = document.createElement("option");
+              o.value = n;
+              o.textContent = n;
+              empSel.appendChild(o);
+            });
+
+          // year dropdown
+          const yearSel = document.getElementById("year-filter");
+          yearSel.innerHTML = '<option value="">All Years</option>';
+          [...new Set(allAttendance.map((r) => r.yy).filter(Boolean))]
+            .sort()
+            .forEach((y) => {
+              const o = document.createElement("option");
+              o.value = y;
+              o.textContent = "20" + y;
+              yearSel.appendChild(o);
+            });
+
+          document.getElementById("last-refresh").textContent =
+            `Last refreshed\n${new Date().toLocaleTimeString()}`;
+          applyFilters();
+        } catch (e) {
+          console.error(e);
+          document.getElementById("table-body").innerHTML =
+            `<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">⚠️</div><p>Error loading data.</p><p style="font-size:11px;margin-top:6px;color:#aaa">${e.message}</p></div></td></tr>`;
+        }
+      }
+
+      /* ── absent calc ──
+   Logic: for each employee × working day in range → if no attendance entry = absent
+   Only counts past + today, not future
+*/
+      function calcAbsent(emp, date, year, month) {
+        const today = new Date();
+        today.setHours(23, 59, 59, 999);
+
+        const empList = emp
+          ? allUsers.filter((u) => u.name === emp).map((u) => u.id)
+          : allUsers.map((u) => u.id);
+
+        let from, to;
+        if (date) {
+          from = to = new Date(date + "T00:00:00");
+        } else if (year && month) {
+          const yr = 2000 + parseInt(year),
+            mo = parseInt(month) - 1;
+          from = new Date(yr, mo, 1);
+          to = new Date(yr, mo + 1, 0);
+        } else if (month) {
+          // pick years available in data for that month
+          const yrs = [
+            ...new Set(
+              allAttendance
+                .filter((r) => r.mm === month)
+                .map((r) => r.dateObj.getFullYear()),
+            ),
+          ];
+          if (!yrs.length) return { count: 0, sub: "No data" };
+          const yr = Math.max(...yrs);
+          from = new Date(yr, parseInt(month) - 1, 1);
+          to = new Date(yr, parseInt(month), 0);
+        } else if (year) {
+          const yr = 2000 + parseInt(year);
+          from = new Date(yr, 0, 1);
+          to = new Date(yr, 11, 31);
         } else {
-          inp.type = "password";
-          ico.className = "bi bi-eye";
+          const dates = allAttendance.map((r) => r.dateObj).filter(Boolean);
+          if (!dates.length) return { count: 0, sub: "No data" };
+          from = new Date(Math.min(...dates));
+          to = new Date(Math.min(Math.max(...dates), today));
         }
+
+        if (to > today) to = new Date(today);
+        const wdays = workingDaysBetween(from, to);
+        if (!wdays.length) return { count: 0, sub: "0 working days" };
+
+        const presentSet = new Set(
+          allAttendance
+            .map((r) => (r.isoDate ? `${r.empId}__${r.isoDate}` : null))
+            .filter(Boolean),
+        );
+
+        let absent = 0;
+        for (const id of empList)
+          for (const d of wdays) if (!presentSet.has(`${id}__${d}`)) absent++;
+
+        return { count: absent, sub: `${wdays.length} working day(s)` };
       }
 
-      function showToast(msg, type = "success") {
-        const t = document.createElement("div");
-        t.className = `toast-item toast-${type}`;
-        t.innerHTML = `<i class="bi bi-${type === "success" ? "check-circle-fill" : "exclamation-circle-fill"}" style="color:var(--${type === "success" ? "green" : "red"})"></i> ${msg}`;
-        $("toastWrap").appendChild(t);
-        setTimeout(() => t.remove(), 4000);
+      /* ── apply filters ── */
+      function applyFilters() {
+        const emp = document.getElementById("emp-filter").value;
+        const year = document.getElementById("year-filter").value;
+        const month = document.getElementById("month-filter").value;
+        const date = document.getElementById("date-filter").value;
+
+        let filtered = [...allAttendance];
+        if (emp) filtered = filtered.filter((r) => r.empName === emp);
+        if (year) filtered = filtered.filter((r) => r.yy === year);
+        if (month) filtered = filtered.filter((r) => r.mm === month);
+        if (date) {
+          const d = new Date(date + "T00:00:00");
+          filtered = filtered.filter(
+            (r) =>
+              r.dateObj &&
+              r.dateObj.getFullYear() === d.getFullYear() &&
+              r.dateObj.getMonth() === d.getMonth() &&
+              r.dateObj.getDate() === d.getDate(),
+          );
+        }
+
+        const presentCount = filtered.filter((r) => r.status === "P").length;
+        const halfdayCount = filtered.filter((r) => r.status === "HD").length;
+        const totalLateSec = filtered.reduce((a, r) => a + r.lateSec, 0);
+        const lateCount = filtered.filter((r) => r.lateSec > 0).length;
+        const absent = calcAbsent(emp, date, year, month);
+
+        document.getElementById("count-present").textContent = presentCount;
+        document.getElementById("sub-present").textContent =
+          `${halfdayCount} half day included`;
+        document.getElementById("count-absent").textContent = absent.count;
+        document.getElementById("sub-absent").textContent = absent.sub;
+        document.getElementById("count-halfday").textContent = halfdayCount;
+        document.getElementById("sub-halfday").textContent =
+          `Out of ${presentCount + halfdayCount} marked`;
+        document.getElementById("count-late").textContent =
+          secToHMS(totalLateSec);
+        document.getElementById("sub-late").textContent =
+          `${lateCount} late arrival(s)`;
+
+        const mNames = [
+          "",
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        const parts = [];
+        if (emp) parts.push(emp);
+        if (year) parts.push("20" + year);
+        if (month) parts.push(mNames[parseInt(month)]);
+        if (date)
+          parts.push(
+            new Date(date + "T00:00:00").toLocaleDateString("en-IN", {
+              day: "numeric",
+              month: "short",
+              year: "numeric",
+            }),
+          );
+        document.getElementById("active-filter-label").textContent =
+          parts.length ? parts.join(" · ") : "All Records";
+
+        document.getElementById("row-count").textContent =
+          `${filtered.length} records`;
+        const tbody = document.getElementById("table-body");
+
+        if (!filtered.length) {
+          tbody.innerHTML =
+            '<tr><td colspan="6"><div class="empty-state"><div class="empty-icon">🔍</div><p>No records found.</p></div></td></tr>';
+          return;
+        }
+
+        tbody.innerHTML = filtered
+          .map((r) => {
+            const lateBadge =
+              r.lateSec > 0
+                ? `<span class="late-badge">${r.lateStr}</span>`
+                : `<span style="color:var(--text-tertiary);font-family:'DM Mono',monospace;font-size:12px;">—</span>`;
+            const statusBadge =
+              r.status === "P"
+                ? `<span class="status-badge status-P">Present</span>`
+                : r.status === "HD"
+                  ? `<span class="status-badge status-HD">Half Day</span>`
+                  : `<span class="status-badge">${r.status || "—"}</span>`;
+            const punchOut =
+              r.punchOut === "—"
+                ? `<span class="time-val punch-none">Not yet</span>`
+                : `<span class="time-val punch-out">${r.punchOut}</span>`;
+
+            return `<tr>
+      <td><div class="emp-name">${r.empName}</div><div class="emp-id">${r.empId}</div></td>
+      <td style="font-family:'DM Mono',monospace;font-size:12px;white-space:nowrap;">${r.dateStr}</td>
+      <td><span class="time-val punch-in">${r.punchIn}</span></td>
+      <td>${punchOut}</td>
+      <td>${statusBadge}</td>
+      <td>${lateBadge}</td>
+    </tr>`;
+          })
+          .join("");
       }
 
-      function hideLoading() {
-        const ls = $("loadingScreen");
-        ls.style.opacity = "0";
-        ls.style.transition = "opacity 0.4s";
-        setTimeout(() => (ls.style.display = "none"), 400);
-      }
-
-      $("editModal").addEventListener("click", function (e) {
-        if (e.target === this) closeModal();
+      /* ── events ── */
+      ["emp-filter", "year-filter", "month-filter", "date-filter"].forEach(
+        (id) => {
+          document.getElementById(id).addEventListener("change", applyFilters);
+        },
+      );
+      document.getElementById("clear-btn").addEventListener("click", () => {
+        ["emp-filter", "year-filter", "month-filter", "date-filter"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        applyFilters();
       });
+      document
+        .getElementById("refresh-btn")
+        .addEventListener("click", loadData);
+
+      // Hamburger
+      const hbg = document.getElementById("hamburger");
+      const sb = document.getElementById("sidebar");
+      const ov = document.getElementById("sidebar-overlay");
+      hbg.addEventListener("click", () => {
+        sb.classList.toggle("open");
+        ov.classList.toggle("active");
+      });
+      ov.addEventListener("click", () => {
+        sb.classList.remove("open");
+        ov.classList.remove("active");
+      });
+
+      // Default: today
+      (() => {
+        const t = new Date();
+        document.getElementById("date-filter").value =
+          `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
+      })();
+
+      loadData();
     </script>
   </body>
 </html>

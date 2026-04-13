@@ -1,0 +1,1351 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leave Management Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --sidebar-bg: #1b2a4a;
+        --sidebar-hover: #253658;
+        --sidebar-border: rgba(255, 255, 255, 0.08);
+        --sidebar-text: #a8b8d8;
+        --sidebar-heading: #5c7aae;
+        --sidebar-w: 250px;
+        --bg: #f0f4fa;
+        --surface: #ffffff;
+        --surface2: #f5f8ff;
+        --border: #dde5f0;
+        --text: #1a2540;
+        --text2: #4a5c7a;
+        --text3: #8a9bbf;
+        --blue: #2563eb;
+        --blue-dk: #1d4ed8;
+        --blue-lt: #eef3ff;
+        --blue-md: #bfcfff;
+        --green: #16a34a;
+        --green-lt: #f0fdf4;
+        --amber: #d97706;
+        --amber-lt: #fffbeb;
+        --purple: #7c3aed;
+        --purple-lt: #f5f3ff;
+        --radius: 12px;
+        --radius-sm: 8px;
+        --shadow: 0 1px 4px rgba(20, 40, 100, 0.08);
+        --shadow-md: 0 4px 16px rgba(20, 40, 100, 0.1);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: "Inter", sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        min-height: 100vh;
+        font-size: 14px;
+      }
+      .app {
+        display: flex;
+        min-height: 100vh;
+      }
+
+      /* SIDEBAR */
+      .sidebar {
+        width: var(--sidebar-w);
+        min-width: var(--sidebar-w);
+        background: var(--sidebar-bg);
+        display: flex;
+        flex-direction: column;
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        overflow-y: auto;
+        z-index: 100;
+        transition: transform 0.25s ease;
+      }
+      .sb-logo {
+        padding: 22px 20px 18px;
+        border-bottom: 1px solid var(--sidebar-border);
+      }
+      .sb-logo-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        letter-spacing: -0.3px;
+      }
+      .sb-logo-sub {
+        font-size: 10px;
+        font-weight: 500;
+        color: var(--sidebar-heading);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 3px;
+      }
+      .sb-filters {
+        padding: 20px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        flex: 1;
+      }
+      .sb-filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .sb-label {
+        font-size: 10px;
+        font-weight: 600;
+        color: var(--sidebar-heading);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+      }
+      .sb-select {
+        width: 100%;
+        padding: 8px 30px 8px 10px;
+        font-size: 13px;
+        font-family: "Inter", sans-serif;
+        font-weight: 500;
+        background: var(--sidebar-hover);
+        border: 1px solid var(--sidebar-border);
+        border-radius: var(--radius-sm);
+        color: #e8eeff;
+        outline: none;
+        appearance: none;
+        -webkit-appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%235C7AAE' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        cursor: pointer;
+        transition: border-color 0.15s;
+      }
+      .sb-select:focus {
+        border-color: var(--blue);
+      }
+      .sb-select option {
+        background: #1b2a4a;
+        color: #e8eeff;
+      }
+      .sb-reset {
+        margin: 0 16px 16px;
+        padding: 9px;
+        font-size: 12px;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        background: transparent;
+        border: 1px solid var(--sidebar-border);
+        border-radius: var(--radius-sm);
+        color: var(--sidebar-text);
+        cursor: pointer;
+        letter-spacing: 0.3px;
+        transition: all 0.15s;
+        width: calc(100% - 32px);
+      }
+      .sb-reset:hover {
+        background: var(--sidebar-hover);
+        color: #fff;
+      }
+
+      /* REFRESH BTN */
+      .sb-refresh {
+        margin: 0 16px 6px;
+        padding: 9px;
+        font-size: 12px;
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        background: var(--blue);
+        border: none;
+        border-radius: var(--radius-sm);
+        color: #fff;
+        cursor: pointer;
+        letter-spacing: 0.3px;
+        transition: all 0.15s;
+        width: calc(100% - 32px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+      }
+      .sb-refresh:hover {
+        background: var(--blue-dk);
+      }
+      .sb-refresh:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+      .spin {
+        animation: spin 1s linear infinite;
+        display: inline-block;
+      }
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* LAST REFRESH */
+      .last-refresh {
+        margin: 0 16px 16px;
+        font-size: 10px;
+        color: var(--sidebar-heading);
+        text-align: center;
+      }
+
+      /* TOPBAR */
+      .topbar {
+        display: none;
+        align-items: center;
+        justify-content: space-between;
+        background: var(--sidebar-bg);
+        padding: 14px 16px;
+        position: sticky;
+        top: 0;
+        z-index: 200;
+      }
+      .topbar-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .hamburger {
+        background: none;
+        border: none;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        padding: 4px;
+      }
+      .hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: #fff;
+        border-radius: 2px;
+      }
+      .overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 99;
+      }
+      .overlay.show {
+        display: block;
+      }
+
+      /* MAIN */
+      .main {
+        flex: 1;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        min-width: 0;
+      }
+      .page-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      .page-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.5px;
+      }
+      .page-sub {
+        font-size: 13px;
+        color: var(--text3);
+        margin-top: 2px;
+      }
+      .date-badge {
+        background: var(--blue);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 5px 12px;
+        border-radius: 99px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      /* LOADING / ERROR */
+      .loading-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(240, 244, 250, 0.85);
+        z-index: 500;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .loading-overlay.show {
+        display: flex;
+      }
+      .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid var(--blue-md);
+        border-top-color: var(--blue);
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+      }
+      .loading-text {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--blue);
+      }
+
+      .error-banner {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        border-radius: var(--radius-sm);
+        padding: 12px 16px;
+        font-size: 13px;
+        color: #b91c1c;
+        display: none;
+        margin-bottom: 4px;
+      }
+      .error-banner.show {
+        display: block;
+      }
+
+      /* CONFIG BANNER */
+      .config-banner {
+        background: var(--amber-lt);
+        border: 1px solid #fde68a;
+        border-radius: var(--radius-sm);
+        padding: 14px 16px;
+        font-size: 13px;
+        color: #92400e;
+        margin-bottom: 4px;
+      }
+      .config-banner b {
+        font-weight: 700;
+      }
+      .config-banner code {
+        background: #fef3c7;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: monospace;
+        font-size: 12px;
+      }
+
+      /* KPI */
+      .kpi-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+      }
+
+      .kpi-card {
+        font-size: 12px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 16px 18px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+      }
+      .kpi-card::after {
+        content: "";
+        position: absolute;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        border-radius: var(--radius) 0 0 var(--radius);
+      }
+      .kpi-card.blue::after {
+        background: var(--blue);
+      }
+      .kpi-card.green::after {
+        background: var(--green);
+      }
+      .kpi-card.amber::after {
+        background: var(--amber);
+      }
+      .kpi-card.purple::after {
+        background: var(--purple);
+      }
+      .kpi-icon {
+        width: 42px;
+        height: 42px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        flex-shrink: 0;
+      }
+      .kpi-icon.blue {
+        background: var(--blue-lt);
+      }
+      .kpi-icon.green {
+        background: var(--green-lt);
+      }
+      .kpi-icon.amber {
+        background: var(--amber-lt);
+      }
+      .kpi-icon.purple {
+        background: var(--purple-lt);
+      }
+      .kpi-val {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: -1px;
+        line-height: 1;
+      }
+      .kpi-val.blue {
+        font-size: 15px;
+        color: var(--blue);
+      }
+      .kpi-val.green {
+        font-size: 15px;
+        color: var(--green);
+      }
+      .kpi-val.amber {
+        font-size: 15px;
+        color: var(--amber);
+      }
+      .kpi-val.purple {
+        font-size: 15px;
+        color: var(--purple);
+      }
+      .kpi-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: var(--text);
+        margin-top: 2px;
+      }
+      .kpi-sub {
+        font-size: 11px;
+        color: var(--text3);
+        margin-top: 1px;
+      }
+
+      /* TABS */
+      .tabs-wrap {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .tabs-header {
+        display: flex;
+        background: var(--surface2);
+        border-bottom: 1px solid var(--border);
+        padding: 0 4px;
+      }
+      .tab-btn {
+        padding: 12px 18px;
+        font-size: 13px;
+        font-weight: 600;
+        font-family: "Inter", sans-serif;
+        color: var(--text3);
+        background: none;
+        border: none;
+        cursor: pointer;
+        border-bottom: 2px solid transparent;
+        transition: all 0.15s;
+        margin-bottom: -1px;
+      }
+      .tab-btn.active {
+        color: var(--blue);
+        border-bottom-color: var(--blue);
+      }
+      .tab-count {
+        display: inline-block;
+        font-size: 10px;
+        font-weight: 700;
+        background: var(--blue-lt);
+        color: var(--blue);
+        padding: 1px 6px;
+        border-radius: 99px;
+        margin-left: 5px;
+        vertical-align: middle;
+      }
+      .tab-btn.active .tab-count {
+        background: var(--blue);
+        color: #fff;
+      }
+      .tab-content {
+        padding: 16px;
+        min-height: 120px;
+      }
+
+      /* LEAVE CARDS */
+      .leave-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); /* 🔥 FIX */
+        gap: 12px;
+      }
+      .leave-card {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 12px 14px;
+        transition:
+          box-shadow 0.15s,
+          transform 0.15s;
+        border-left: 3px solid var(--blue-md);
+      }
+      .leave-card:hover {
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+      }
+      .leave-card.upcoming {
+        border-left-color: var(--blue);
+      }
+      .leave-card.current {
+        border-left-color: var(--green);
+      }
+      .leave-card.past {
+        border-left-color: var(--text3);
+      }
+      .lc-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 8px;
+      }
+      .lc-name {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--text);
+      }
+      .lc-id {
+        font-size: 11px;
+        color: var(--text3);
+        margin-top: 1px;
+        font-weight: 500;
+      }
+      .badge {
+        font-size: 10px;
+        font-weight: 700;
+        padding: 3px 8px;
+        border-radius: 99px;
+        white-space: nowrap;
+        letter-spacing: 0.3px;
+        text-transform: uppercase;
+        flex-shrink: 0;
+      }
+      .badge.approved {
+        background: var(--green-lt);
+        color: var(--green);
+        border: 1px solid #bbf7d0;
+      }
+      .badge.pending {
+        background: var(--amber-lt);
+        color: var(--amber);
+        border: 1px solid #fde68a;
+      }
+      .badge.current {
+        background: var(--blue-lt);
+        color: var(--blue);
+        border: 1px solid var(--blue-md);
+      }
+      .lc-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 4px;
+        margin-bottom: 8px;
+      }
+      .chip {
+        font-size: 11px;
+        font-weight: 500;
+        background: var(--blue-lt);
+        color: var(--blue-dk);
+        padding: 2px 8px;
+        border-radius: 99px;
+        border: 1px solid var(--blue-md);
+      }
+      .chip.gray {
+        background: #f1f5f9;
+        color: var(--text2);
+        border-color: var(--border);
+      }
+      .lc-dates {
+        font-size: 12px;
+        color: var(--text2);
+        margin-bottom: 4px;
+      }
+      .lc-reason {
+        font-size: 12px;
+        color: var(--text3);
+        font-style: italic;
+      }
+      .lc-days {
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--blue);
+        margin-top: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .lc-days-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--blue);
+      }
+      .empty-state {
+        text-align: center;
+        padding: 36px 20px;
+        color: var(--text3);
+      }
+      .empty-icon {
+        font-size: 32px;
+        margin-bottom: 8px;
+      }
+      .empty-text {
+        font-size: 13px;
+        font-weight: 500;
+      }
+
+      /* EMP PANEL */
+      .emp-panel {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        box-shadow: var(--shadow);
+      }
+      .ep-header {
+        padding: 16px 20px;
+        background: linear-gradient(135deg, #1b2a4a 0%, #2563eb 100%);
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+      .ep-avatar {
+        width: 46px;
+        height: 46px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.15);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 15px;
+        font-weight: 700;
+        color: #fff;
+        border: 2px solid rgba(255, 255, 255, 0.25);
+        flex-shrink: 0;
+      }
+      .ep-name {
+        font-size: 16px;
+        font-weight: 700;
+        color: #fff;
+      }
+      .ep-id {
+        font-size: 12px;
+        color: rgba(255, 255, 255, 0.65);
+        margin-top: 2px;
+        font-weight: 500;
+      }
+      .ep-body {
+        padding: 16px 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      .ep-section-title {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text3);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 8px;
+      }
+      .bal-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+      .bal-item {
+        background: var(--surface2);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-sm);
+        padding: 10px 12px;
+      }
+      .bal-lbl {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--text3);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+      }
+      .bal-track {
+        height: 5px;
+        background: var(--border);
+        border-radius: 99px;
+        overflow: hidden;
+        margin-bottom: 6px;
+      }
+      .bal-fill {
+        height: 100%;
+        border-radius: 99px;
+        transition: width 0.5s ease;
+      }
+      .bal-nums {
+        font-size: 12px;
+        color: var(--text2);
+      }
+      .bal-nums b {
+        color: var(--text);
+        font-weight: 700;
+      }
+      .hist-wrap {
+        overflow-x: auto;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--border);
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        min-width: 560px;
+      }
+      thead {
+        background: var(--blue);
+      }
+      thead th {
+        text-align: left;
+        padding: 9px 12px;
+        font-size: 11px;
+        font-weight: 700;
+        color: #fff;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+      }
+      tbody tr {
+        transition: background 0.1s;
+      }
+      tbody tr:nth-child(even) {
+        background: var(--surface2);
+      }
+      tbody tr:hover {
+        background: var(--blue-lt);
+      }
+      tbody td {
+        padding: 9px 12px;
+        color: var(--text);
+        vertical-align: middle;
+        border-bottom: 1px solid var(--border);
+      }
+      tbody tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* MOBILE */
+
+      @media (max-width: 768px) {
+        .sb-filters {
+          margin-top: 60px; /* topbar ke neeche spacing */
+          padding-top: 10px;
+        }
+        .topbar {
+          display: flex;
+        }
+        .app {
+          flex-direction: column;
+        }
+        .sidebar {
+          position: fixed;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          transform: translateX(-100%);
+          height: 100vh;
+          z-index: 150;
+          box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+        }
+        .sidebar.open {
+          transform: translateX(0);
+        }
+        .main {
+          padding: 16px;
+          gap: 14px;
+        }
+        .page-header {
+          flex-direction: column;
+          gap: 8px;
+        }
+        .kpi-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 8px;
+        }
+        .kpi-card {
+          padding: 12px 14px;
+        }
+        .kpi-val {
+          font-size: 22px;
+        }
+        .bal-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .leave-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+      @media (max-width: 420px) {
+        .kpi-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+        .bal-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="loading-overlay" id="loadingOverlay">
+      <div class="loading-spinner"></div>
+      <div class="loading-text">Fetching data from Google Sheets...</div>
+    </div>
+
+    <div class="topbar">
+      <span class="topbar-title">Leave Dashboard</span>
+      <button class="hamburger" onclick="toggleSidebar()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+    <div class="overlay" id="overlay" onclick="toggleSidebar()"></div>
+
+    <div class="app">
+      <aside class="sidebar" id="sidebar">
+        <div class="sb-filters">
+          <div class="sb-filter-group">
+            <span class="sb-label">Employee</span>
+            <select class="sb-select" id="empFilter" onchange="render()">
+              <option value="">All Employees</option>
+            </select>
+          </div>
+          <div class="sb-filter-group">
+            <span class="sb-label">Year</span>
+            <select class="sb-select" id="yearFilter" onchange="render()">
+              <option value="">All Years</option>
+              <option>2024</option>
+              <option>2025</option>
+              <option selected>2026</option>
+              <option>2027</option>
+            </select>
+          </div>
+          <div class="sb-filter-group">
+            <span class="sb-label">Month</span>
+            <select class="sb-select" id="monthFilter" onchange="render()">
+              <option value="">All Months</option>
+              <option>Jan</option>
+              <option>Feb</option>
+              <option>Mar</option>
+              <option>Apr</option>
+              <option>May</option>
+              <option>Jun</option>
+              <option>Jul</option>
+              <option>Aug</option>
+              <option>Sep</option>
+              <option>Oct</option>
+              <option>Nov</option>
+              <option>Dec</option>
+            </select>
+          </div>
+          <div class="sb-filter-group">
+            <span class="sb-label">Leave Type</span>
+            <select class="sb-select" id="typeFilter" onchange="render()">
+              <option value="">All Types</option>
+              <option>CL</option>
+              <option>SL</option>
+              <option>PL</option>
+              <option>CompOf</option>
+              <option>LWP</option>
+            </select>
+          </div>
+        </div>
+        <button class="sb-refresh" id="refreshBtn" onclick="fetchData()">
+          <span id="refreshIcon">↻</span> Refresh Data
+        </button>
+        <div class="last-refresh" id="lastRefresh"></div>
+        <button class="sb-reset" onclick="resetFilters()">
+          ✕ &nbsp;Reset Filters
+        </button>
+      </aside>
+
+      <main class="main">
+        <div id="configBanner"></div>
+        <div class="error-banner" id="errorBanner"></div>
+
+        <div class="page-header">
+          <div>
+            <!-- <div class="page-title">Leave Dashboard</div> -->
+            <!-- <div class="page-sub">Employee Leave Management System</div> -->
+          </div>
+          <div class="date-badge" id="todayBadge"></div>
+        </div>
+
+        <div class="kpi-grid" id="kpiGrid"></div>
+
+        <div class="tabs-wrap">
+          <div class="tabs-header">
+            <button class="tab-btn active" id="tab0" onclick="switchTab(0)">
+              Upcoming &amp; Current <span class="tab-count" id="tc0">0</span>
+            </button>
+            <button class="tab-btn" id="tab1" onclick="switchTab(1)">
+              Past Leaves <span class="tab-count" id="tc1">0</span>
+            </button>
+          </div>
+          <div class="tab-content" id="leaveSection"></div>
+        </div>
+
+        <div id="empPanel"></div>
+      </main>
+    </div>
+
+    <script>
+      /* ════════════════════════════════════════════════
+   ⚙️  CONFIGURATION — SIRF YEH 2 LINES BADLO
+   ════════════════════════════════════════════════ */
+      const SHEET_ID = "1FoAHnlhikIn-d2xFGwaOu982J0RYhjEtih3NrNix8t8"; // ← apna Sheet ID yahan paste karo
+      const SHEET_NAMES = {
+        users: "Users", // ← Users sheet ka exact naam
+        leaves: "Applied_Leave", // ← Applied_Leave sheet ka exact naam
+      };
+      /* ════════════════════════════════════════════════ */
+
+      const TODAY = new Date();
+      const MONTHS = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+      let activeTab = 0;
+      let USERS = [];
+      let LEAVES = [];
+
+      document.getElementById("todayBadge").textContent = fmtDate(TODAY);
+
+      // Show config banner if Sheet ID not set
+      if (SHEET_ID === "YOUR_SHEET_ID_HERE") {
+        document.getElementById("configBanner").innerHTML = `
+    <div class="config-banner">
+      <b>⚙️ Setup Required:</b> <code>leave_dashboard.html</code> file mein upar <code>SHEET_ID</code> replace karo apne Google Sheet ID se.<br>
+      <small style="margin-top:4px;display:block">Sheet URL se copy karo: docs.google.com/spreadsheets/d/<b>YAHAN_WALA_PART</b>/edit</small>
+    </div>`;
+      } else {
+        fetchData();
+      }
+
+      /* ── DATE UTILS ── */
+      function fmtDate(d) {
+        if (!d) return "";
+        const dd = String(d.getDate()).padStart(2, "0");
+        const mm = String(d.getMonth() + 1).padStart(2, "0");
+        const yy = String(d.getFullYear()).slice(2);
+        return `${dd}-${mm}-${yy}`;
+      }
+      function parseDate(s) {
+        if (!s) return null;
+        // handle dd/mm/yyyy or yyyy-mm-dd or dd-mm-yyyy
+        if (s.includes("/")) {
+          const [d, m, y] = s.split("/");
+          return new Date(+y, +m - 1, +d);
+        }
+        if (s.match(/^\d{4}-/)) {
+          const [y, m, d] = s.split("-");
+          return new Date(+y, +m - 1, +d);
+        }
+        if (s.match(/^\d{2}-\d{2}-\d{4}/)) {
+          const [d, m, y] = s.split("-");
+          return new Date(+y, +m - 1, +d);
+        }
+        return new Date(s);
+      }
+      function initials(n) {
+        return n
+          .split(" ")
+          .slice(0, 2)
+          .map((w) => w[0])
+          .join("")
+          .toUpperCase();
+      }
+
+      /* ── FETCH FROM GOOGLE SHEETS ── */
+      async function fetchData() {
+        if (SHEET_ID === "YOUR_SHEET_ID_HERE") return;
+        setLoading(true);
+        hideError();
+        try {
+          const base = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=`;
+          const [uRes, lRes] = await Promise.all([
+            fetch(base + encodeURIComponent(SHEET_NAMES.users)),
+            fetch(base + encodeURIComponent(SHEET_NAMES.leaves)),
+          ]);
+          if (!uRes.ok || !lRes.ok)
+            throw new Error(
+              "Sheet fetch failed. Check SHEET_ID and make sure sheet is public.",
+            );
+          const uText = await uRes.text();
+          const lText = await lRes.text();
+          USERS = parseUsersSheet(uText);
+          LEAVES = parseLeavesSheet(lText);
+          populateEmpDropdown();
+          render();
+          const now = new Date();
+          document.getElementById("lastRefresh").textContent =
+            `Last refreshed: ${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
+        } catch (e) {
+          showError(
+            "❌ " +
+              e.message +
+              ' — Make sure sheet is shared as "Anyone with link can view".',
+          );
+        } finally {
+          setLoading(false);
+        }
+      }
+
+      /* ── PARSE USERS SHEET ──
+   Row1 = headers, Row2+ = data
+   Col index (0-based): A=0,B=1,C=2,...,K=10,L=11,M=12,N=13,...,O=14,P=15,Q=16,...,S=18
+*/
+      function parseUsersSheet(raw) {
+        const json = JSON.parse(
+          raw.replace(/^[^{]*/, "").replace(/[^}]*$/, ""),
+        );
+        const rows = json.table.rows;
+        const out = [];
+        rows.forEach((row, idx) => {
+          const c = row.c || [];
+          const val = (i) => (c[i] && c[i].v != null ? c[i].v : "");
+          const num = (i) => {
+            const v = val(i);
+            return v === "" || v === null || v === undefined
+              ? 0
+              : parseFloat(v) || 0;
+          };
+          const id = String(val(0)).trim();
+          const name = String(val(2)).trim();
+          if (!id || !name) return;
+          out.push({
+            id,
+            name,
+            // K=10, L=11, M=12, N=13 → alloc
+            cl: num(10),
+            sl: num(11),
+            pl: num(12),
+            comp: num(13),
+            // O=14, P=15, Q=16, S=18 → remaining
+            rcl: num(14),
+            rsl: num(15),
+            rpl: num(16),
+            rcomp: num(18),
+          });
+        });
+        return out;
+      }
+
+      /* ── PARSE LEAVES SHEET ──
+   Row1 = headers, Row2+ = data
+   A=EmpID, B=Name, C=LeaveType, D=DayType, E=Start, F=End, G=Days, H=Reason, I=Status
+*/
+      function parseLeavesSheet(raw) {
+        const json = JSON.parse(
+          raw.replace(/^[^{]*/, "").replace(/[^}]*$/, ""),
+        );
+        const rows = json.table.rows;
+        const out = [];
+        rows.forEach((row, idx) => {
+          const c = row.c || [];
+          const val = (i) => (c[i] && c[i].v != null ? c[i].v : "");
+          const id = String(val(0)).trim();
+          if (!id) return;
+
+          // Google Sheets returns dates as "Date(2026,3,7)" for April 7
+          function parseGDate(v) {
+            if (!v) return null;
+            if (typeof v === "string" && v.startsWith("Date(")) {
+              const m = v.match(/Date\((\d+),(\d+),(\d+)\)/);
+              if (m) return new Date(+m[1], +m[2], +m[3]);
+            }
+            return parseDate(String(v));
+          }
+
+          const sd = parseGDate(val(4));
+          const ed = parseGDate(val(5));
+          out.push({
+            id,
+            name: String(val(1)).trim(),
+            type: String(val(2)).trim(),
+            dayType: String(val(3)).trim(),
+            start: sd,
+            end: ed,
+            days: parseFloat(val(6)) || 0,
+            reason: String(val(7)).trim(),
+            status: String(val(8)).trim(),
+          });
+        });
+        return out;
+      }
+
+      /* ── FILTERS ── */
+      function getF() {
+        return {
+          emp: document.getElementById("empFilter").value,
+          year: document.getElementById("yearFilter").value,
+          month: document.getElementById("monthFilter").value,
+          type: document.getElementById("typeFilter").value,
+        };
+      }
+
+      function filterLeaves(arr) {
+        const f = getF();
+        return arr.filter((l) => {
+          if (!l.start) return false;
+          if (f.emp && l.id !== f.emp) return false;
+          if (f.year && String(l.start.getFullYear()) !== f.year) return false;
+          if (f.month && MONTHS[l.start.getMonth()] !== f.month) return false;
+          if (f.type && l.type !== f.type) return false;
+          return true;
+        });
+      }
+
+      function leaveTag(l) {
+        if (!l.start || !l.end) return "upcoming";
+        if (l.end < TODAY) return "past";
+        if (l.start <= TODAY && TODAY <= l.end) return "current";
+        return "upcoming";
+      }
+
+      function switchTab(t) {
+        activeTab = t;
+        [0, 1].forEach((i) =>
+          document
+            .getElementById("tab" + i)
+            .classList.toggle("active", i === t),
+        );
+        renderLeaves();
+      }
+
+      /* ── RENDER KPI ── */
+      function renderKPI() {
+        const f = getF();
+        const users = f.emp ? USERS.filter((u) => u.id === f.emp) : USERS;
+        const alloc = users.reduce(
+          (s, u) => s + u.cl + u.sl + u.pl + u.comp,
+          0,
+        );
+        const rem = users.reduce(
+          (s, u) => s + u.rcl + u.rsl + u.rpl + u.rcomp,
+          0,
+        );
+        const fl = filterLeaves(LEAVES);
+        const pending = fl.filter((l) => l.status === "Pending").length;
+        const approved = fl.filter((l) => l.status === "Approved").length;
+        document.getElementById("kpiGrid").innerHTML = `
+    <div class="kpi-card blue">
+      <div class="kpi-icon blue">📋</div>
+      <div class="kpi-info"><div class="kpi-val blue">${alloc}</div><div class="kpi-label">Total Allocated</div><div class="kpi-sub"></div></div>
+    </div>
+    <div class="kpi-card green">
+      <div class="kpi-icon green">✅</div>
+      <div class="kpi-info"><div class="kpi-val green">${rem}</div><div class="kpi-label">Total Remaining</div><div class="kpi-sub"></div></div>
+    </div>
+    <div class="kpi-card amber">
+      <div class="kpi-icon amber">⏳</div>
+      <div class="kpi-info"><div class="kpi-val amber">${pending}</div><div class="kpi-label">Pending Leaves</div><div class="kpi-sub"></div></div>
+    </div>
+    <div class="kpi-card purple">
+      <div class="kpi-icon purple">🎯</div>
+      <div class="kpi-info"><div class="kpi-val purple">${approved}</div><div class="kpi-label">Approved Leaves</div><div class="kpi-sub"></div></div>
+    </div>`;
+      }
+
+      /* ── RENDER LEAVES ── */
+      function renderLeaves() {
+        const all = filterLeaves(LEAVES);
+        const upcoming = all.filter((l) => leaveTag(l) !== "past");
+        const past = all.filter((l) => leaveTag(l) === "past");
+        document.getElementById("tc0").textContent = upcoming.length;
+        document.getElementById("tc1").textContent = past.length;
+        const cards = activeTab === 0 ? upcoming : past;
+        const sec = document.getElementById("leaveSection");
+        if (!cards.length) {
+          sec.innerHTML = `<div class="empty-state"><div class="empty-icon">📋</div><div class="empty-text">No leaves found for this selection.</div></div>`;
+          return;
+        }
+        sec.innerHTML =
+          '<div class="leave-grid">' +
+          cards
+            .map((l) => {
+              const tag = leaveTag(l);
+              const bc = tag === "current" ? "current" : l.status.toLowerCase();
+              const bt = tag === "current" ? "Current" : l.status;
+              const sd = fmtDate(l.start);
+              const ed = fmtDate(l.end);
+              return `<div class="leave-card ${tag}">
+      <div class="lc-top">
+        <div><div class="lc-name">${l.name}</div><div class="lc-id">${l.id}</div></div>
+        <span class="badge ${bc}">${bt}</span>
+      </div>
+      <div class="lc-chips">
+        <span class="chip">${l.type}</span>
+        <span class="chip gray">${l.dayType}</span>
+      </div>
+      <div class="lc-dates">📅 ${sd} → ${ed}</div>
+      <div class="lc-reason">"${l.reason}"</div>
+      <div class="lc-days"><span class="lc-days-dot"></span>${l.days} day${l.days !== 1 ? "s" : ""}</div>
+    </div>`;
+            })
+            .join("") +
+          "</div>";
+      }
+
+      /* ── RENDER EMP PANEL ── */
+      function renderEmpPanel() {
+        const f = getF();
+        const panel = document.getElementById("empPanel");
+        if (!f.emp) {
+          panel.innerHTML = "";
+          return;
+        }
+        const u = USERS.find((x) => x.id === f.emp);
+        if (!u) {
+          panel.innerHTML = "";
+          return;
+        }
+        const empLeaves = LEAVES.filter((l) => l.id === f.emp);
+
+        function bar(lbl, alloc, rem, color) {
+          const pct = alloc > 0 ? Math.round((rem / alloc) * 100) : 0;
+          return `<div class="bal-item">
+      <div class="bal-lbl">${lbl}</div>
+      <div class="bal-track"><div class="bal-fill" style="width:${pct}%;background:${color}"></div></div>
+      <div class="bal-nums"><b>${rem}</b> / ${alloc} left</div>
+    </div>`;
+        }
+
+        const rows = empLeaves.length
+          ? empLeaves
+              .map(
+                (l) => `
+    <tr>
+      <td>${l.type}</td>
+      <td>${fmtDate(l.start)}</td>
+      <td>${fmtDate(l.end)}</td>
+      <td><b>${l.days}d</b></td>
+      <td>${l.dayType}</td>
+      <td><span class="badge ${l.status.toLowerCase()}">${l.status}</span></td>
+      <td style="color:var(--text3);font-style:italic">${l.reason}</td>
+    </tr>`,
+              )
+              .join("")
+          : '<tr><td colspan="7" style="text-align:center;padding:20px;color:var(--text3)">No leaves applied yet</td></tr>';
+
+        panel.innerHTML = `<div class="emp-panel">
+    <div class="ep-header">
+      <div class="ep-avatar">${initials(u.name)}</div>
+      <div><div class="ep-name">${u.name}</div><div class="ep-id">${u.id}</div></div>
+    </div>
+    <div class="ep-body">
+      <div>
+        <div class="ep-section-title">Leave Balance</div>
+        <div class="bal-grid">
+          ${bar("CL", u.cl, u.rcl, "#2563EB")}
+          ${bar("SL", u.sl, u.rsl, "#16A34A")}
+          ${bar("PL", Math.max(u.pl, 0), u.rpl, "#D97706")}
+          ${bar("CompOf", Math.max(u.comp, 0), u.rcomp, "#7C3AED")}
+        </div>
+      </div>
+      <div>
+        <div class="ep-section-title">Leave History</div>
+        <div class="hist-wrap">
+          <table>
+            <thead><tr><th>Type</th><th>Start</th><th>End</th><th>Days</th><th>Day Type</th><th>Status</th><th>Reason</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>`;
+      }
+
+      function render() {
+        renderKPI();
+        renderLeaves();
+        renderEmpPanel();
+      }
+
+      function populateEmpDropdown() {
+        const sel = document.getElementById("empFilter");
+        const cur = sel.value;
+        sel.innerHTML = '<option value="">All Employees</option>';
+        USERS.forEach((u) => {
+          const o = document.createElement("option");
+          o.value = u.id;
+          o.textContent = `${u.id} — ${u.name}`;
+          sel.appendChild(o);
+        });
+        if (cur) sel.value = cur;
+      }
+
+      function resetFilters() {
+        ["empFilter", "monthFilter", "typeFilter"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("yearFilter").value = "2026";
+        render();
+      }
+
+      function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("open");
+        document.getElementById("overlay").classList.toggle("show");
+      }
+
+      function setLoading(v) {
+        document.getElementById("loadingOverlay").classList.toggle("show", v);
+        const btn = document.getElementById("refreshBtn");
+        const ico = document.getElementById("refreshIcon");
+        btn.disabled = v;
+        ico.textContent = v ? "⟳" : "↻";
+        ico.className = v ? "spin" : "";
+      }
+      function showError(msg) {
+        const b = document.getElementById("errorBanner");
+        b.textContent = msg;
+        b.classList.add("show");
+      }
+      function hideError() {
+        document.getElementById("errorBanner").classList.remove("show");
+      }
+    </script>
+  </body>
+</html>

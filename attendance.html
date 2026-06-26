@@ -660,9 +660,7 @@
       table.summary-table th:nth-child(3),
       table.summary-table td:nth-child(3),
       table.summary-table th:nth-child(4),
-      table.summary-table td:nth-child(4) {
-        width: 14%;
-      }
+      table.summary-table td:nth-child(4),
       table.summary-table th:nth-child(5),
       table.summary-table td:nth-child(5) {
         width: 24%;
@@ -782,6 +780,57 @@
         }
         .time-chip-val {
           font-size: 12px;
+        }
+
+        /* SUMMARY TABLE → MOBILE CARD LIST (no horizontal scroll) */
+        .summary-table-wrap {
+          overflow-x: visible;
+          padding: 0;
+        }
+        table.summary-table {
+          min-width: 0;
+        }
+        table.summary-table thead {
+          display: none;
+        }
+        table.summary-table,
+        table.summary-table tbody,
+        table.summary-table tr,
+        table.summary-table td {
+          display: block;
+          width: 100% !important;
+        }
+        table.summary-table tr {
+          background: #fff;
+          border: 1px solid var(--stroke2);
+          border-radius: 10px;
+          margin-bottom: 10px;
+          overflow: hidden;
+        }
+        table.summary-table td {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 8px 14px;
+          border-bottom: 1px solid var(--stroke2);
+          text-align: right;
+        }
+        table.summary-table tr td:last-child {
+          border-bottom: none;
+        }
+        table.summary-table td.name-cell {
+          display: block;
+          text-align: left;
+          background: var(--bg);
+          border-bottom: 1px solid var(--stroke2);
+        }
+        table.summary-table td:not(.name-cell)::before {
+          content: attr(data-label);
+          font-size: 11px;
+          font-weight: 600;
+          color: var(--text-secondary);
+          text-transform: uppercase;
+          letter-spacing: 0.3px;
         }
       }
       @media (max-width: 400px) {
@@ -1226,11 +1275,11 @@
                   .map(
                     (s) => `
                   <tr>
-                    <td class="name-cell">${s.name}<br><span style="font-size:10px;color:var(--text-tertiary);font-weight:400;">${s.id}</span></td>
-                    <td class="num present-col">${s.present}</td>
-                    <td class="num absent-col">${s.absent}</td>
-                    <td class="num halfday-col">${s.halfday}</td>
-                    <td class="num late-col">${secToHMS(s.lateSec)}</td>
+                    <td class="name-cell" data-label="Employee">${s.name}<br><span style="font-size:10px;color:var(--text-tertiary);font-weight:400;">${s.id}</span></td>
+                    <td class="num present-col" data-label="Present">${s.present}</td>
+                    <td class="num absent-col" data-label="Absent">${s.absent}</td>
+                    <td class="num halfday-col" data-label="Half Day">${s.halfday}</td>
+                    <td class="num late-col" data-label="Total Late Time">${secToHMS(s.lateSec)}</td>
                   </tr>
                 `,
                   )

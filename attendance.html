@@ -53,31 +53,6 @@
         display: flex;
       }
 
-      /* HAMBURGER */
-      /* .hamburger {
-        display: none;
-        position: fixed;
-        top: 14px;
-        left: 14px;
-        z-index: 200;
-        background: var(--primary);
-        border: none;
-        border-radius: 8px;
-        width: 40px;
-        height: 40px;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 5px;
-        cursor: pointer;
-      } */
-      /* .hamburger span {
-        display: block;
-        width: 20px;
-        height: 2px;
-        background: #fff;
-        border-radius: 2px;
-      } */
       .sidebar-overlay {
         display: none;
         position: fixed;
@@ -227,6 +202,60 @@
       }
       .refresh-btn:hover {
         background: rgba(255, 255, 255, 0.12);
+      }
+
+      /* SUMMARY TOGGLE */
+      .summary-toggle-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(168, 196, 212, 0.2);
+        border-radius: 8px;
+        padding: 9px 11px;
+        margin-bottom: 14px;
+      }
+      .summary-toggle-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: #fff;
+      }
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 38px;
+        height: 21px;
+        flex-shrink: 0;
+      }
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+      .switch-slider {
+        position: absolute;
+        cursor: pointer;
+        inset: 0;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 21px;
+        transition: 0.2s;
+      }
+      .switch-slider::before {
+        position: absolute;
+        content: "";
+        height: 15px;
+        width: 15px;
+        left: 3px;
+        bottom: 3px;
+        background-color: #fff;
+        border-radius: 50%;
+        transition: 0.2s;
+      }
+      .switch input:checked + .switch-slider {
+        background-color: #4caf50;
+      }
+      .switch input:checked + .switch-slider::before {
+        transform: translateX(17px);
       }
 
       /* MAIN */
@@ -604,6 +633,93 @@
         color: #fff;
         cursor: pointer;
       }
+
+      .emp-cards-list.summary-mode {
+        display: block;
+        padding: 0;
+      }
+
+      /* SUMMARY TABLE */
+      .summary-table-wrap {
+        overflow-x: auto;
+        padding: 4px;
+      }
+      table.summary-table {
+        width: 100%;
+        table-layout: fixed;
+        border-collapse: collapse;
+        font-size: 13px;
+        min-width: 640px;
+      }
+      table.summary-table th:nth-child(1),
+      table.summary-table td:nth-child(1) {
+        width: 34%;
+      }
+      table.summary-table th:nth-child(2),
+      table.summary-table td:nth-child(2),
+      table.summary-table th:nth-child(3),
+      table.summary-table td:nth-child(3),
+      table.summary-table th:nth-child(4),
+      table.summary-table td:nth-child(4) {
+        width: 14%;
+      }
+      table.summary-table th:nth-child(5),
+      table.summary-table td:nth-child(5) {
+        width: 24%;
+      }
+      table.summary-table thead th {
+        text-align: left;
+        font-size: 11px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        color: var(--text-secondary);
+        background: var(--bg);
+        padding: 10px 14px;
+        position: sticky;
+        top: 0;
+      }
+      table.summary-table thead th.num {
+        text-align: center;
+      }
+      table.summary-table thead th.sortable {
+        cursor: pointer;
+        user-select: none;
+        transition: color 0.15s;
+      }
+      table.summary-table thead th.sortable:hover {
+        color: var(--primary);
+      }
+      table.summary-table tbody td {
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--stroke2);
+        font-family: "DM Mono", monospace;
+        font-size: 13px;
+      }
+      table.summary-table tbody td.name-cell {
+        font-family: "DM Sans", sans-serif;
+        font-weight: 600;
+        color: var(--primary);
+      }
+      table.summary-table tbody td.num {
+        text-align: center;
+        font-weight: 600;
+      }
+      table.summary-table tbody tr:hover td {
+        background: rgba(26, 39, 68, 0.03);
+      }
+      td.num.present-col {
+        color: var(--present-text);
+      }
+      td.num.absent-col {
+        color: var(--absent-text);
+      }
+      td.num.halfday-col {
+        color: var(--halfday-text);
+      }
+      td.num.late-col {
+        color: var(--late-text);
+      }
+
       /* RESPONSIVE */
       @media (max-width: 1100px) {
         .cards-row {
@@ -688,8 +804,14 @@
 
     <aside class="sidebar" id="sidebar">
       <div class="sidebar-section">
-        <!-- <div class="sidebar-section-label">Filters</div> -->
-        <div class="filter-group">
+        <div class="summary-toggle-row">
+          <span class="summary-toggle-label">📊 Summary View</span>
+          <label class="switch">
+            <input type="checkbox" id="summary-toggle" />
+            <span class="switch-slider"></span>
+          </label>
+        </div>
+        <div class="filter-group" id="emp-filter-group">
           <label class="filter-label">Employee</label>
           <div class="select-wrapper">
             <select class="filter-select" id="emp-filter">
@@ -725,7 +847,7 @@
             </select>
           </div>
         </div>
-        <div class="filter-group">
+        <div class="filter-group" id="date-filter-group">
           <label class="filter-label">Specific Date</label>
           <input type="date" class="filter-input" id="date-filter" />
         </div>
@@ -739,13 +861,11 @@
 
     <main class="main">
       <div class="page-header">
-        <!-- <h1>Attendance Dashboard</h1>
-        <p>Real-time employee attendance tracking</p> -->
         <span id="active-filter-label">Today</span>
       </div>
 
       <!-- 2x2 COMPACT STATS -->
-      <div class="cards-row">
+      <div class="cards-row" id="stats-row">
         <div class="stat-card present">
           <div class="stat-icon">✅</div>
           <div class="stat-info">
@@ -780,10 +900,12 @@
         </div>
       </div>
 
-      <!-- EMPLOYEE CARDS -->
+      <!-- EMPLOYEE CARDS / SUMMARY -->
       <div class="cards-section">
         <div class="cards-section-header">
-          <div class="cards-section-title">Attendance Log</div>
+          <div class="cards-section-title" id="section-title">
+            Attendance Log
+          </div>
           <div class="cards-section-count" id="row-count">Loading...</div>
         </div>
         <div class="emp-cards-list" id="emp-cards-list">
@@ -1063,7 +1185,209 @@
         document.getElementById("sidebar").classList.toggle("open");
         document.getElementById("sidebar-overlay").classList.toggle("active");
       }
+
+      function isSummaryMode() {
+        return document.getElementById("summary-toggle").checked;
+      }
+
+      let summarySortKey = "name";
+      let summarySortDir = 1; // 1 asc, -1 desc
+      let lastSummaryList = [];
+
+      function renderSummaryTable() {
+        const container = document.getElementById("emp-cards-list");
+        container.classList.add("summary-mode");
+        const list = [...lastSummaryList].sort((a, b) => {
+          let av = a[summarySortKey],
+            bv = b[summarySortKey];
+          if (typeof av === "string") {
+            return summarySortDir * av.localeCompare(bv);
+          }
+          return summarySortDir * (av - bv);
+        });
+
+        const arrow = (key) =>
+          summarySortKey === key ? (summarySortDir === 1 ? " ▲" : " ▼") : "";
+
+        container.innerHTML = `
+          <div class="summary-table-wrap">
+            <table class="summary-table">
+              <thead>
+                <tr>
+                  <th class="sortable" data-sort="name">Employee${arrow("name")}</th>
+                  <th class="num sortable" data-sort="present">Present${arrow("present")}</th>
+                  <th class="num sortable" data-sort="absent">Absent${arrow("absent")}</th>
+                  <th class="num sortable" data-sort="halfday">Half Day${arrow("halfday")}</th>
+                  <th class="num sortable" data-sort="lateSec">Total Late Time${arrow("lateSec")}</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${list
+                  .map(
+                    (s) => `
+                  <tr>
+                    <td class="name-cell">${s.name}<br><span style="font-size:10px;color:var(--text-tertiary);font-weight:400;">${s.id}</span></td>
+                    <td class="num present-col">${s.present}</td>
+                    <td class="num absent-col">${s.absent}</td>
+                    <td class="num halfday-col">${s.halfday}</td>
+                    <td class="num late-col">${secToHMS(s.lateSec)}</td>
+                  </tr>
+                `,
+                  )
+                  .join("")}
+              </tbody>
+            </table>
+          </div>
+        `;
+
+        container.querySelectorAll("th.sortable").forEach((th) => {
+          th.addEventListener("click", () => {
+            const key = th.getAttribute("data-sort");
+            if (summarySortKey === key) {
+              summarySortDir *= -1;
+            } else {
+              summarySortKey = key;
+              summarySortDir = 1;
+            }
+            renderSummaryTable();
+          });
+        });
+      }
+
+      function renderSummaryView() {
+        const year = document.getElementById("year-filter").value;
+        const month = document.getElementById("month-filter").value;
+
+        // Hide stat cards in summary mode
+        document.getElementById("stats-row").style.display = "none";
+        document.getElementById("section-title").textContent =
+          "Monthly Summary";
+
+        const mNames = [
+          "",
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ];
+        const labelParts = [];
+        if (year) labelParts.push("20" + year);
+        if (month) labelParts.push(mNames[parseInt(month)]);
+        document.getElementById("active-filter-label").textContent =
+          labelParts.length
+            ? labelParts.join(" · ") + " Summary"
+            : "All Records Summary";
+
+        // Determine working days in range for absent calc
+        const today = new Date();
+        today.setHours(23, 59, 59, 999);
+        let from, to;
+        if (year && month) {
+          const yr = 2000 + parseInt(year),
+            mo = parseInt(month) - 1;
+          from = new Date(yr, mo, 1);
+          to = new Date(yr, mo + 1, 0);
+        } else if (month) {
+          const yrs = [
+            ...new Set(
+              allAttendance
+                .filter((r) => r.mm === month)
+                .map((r) => r.dateObj.getFullYear()),
+            ),
+          ];
+          const yr = yrs.length ? Math.max(...yrs) : today.getFullYear();
+          from = new Date(yr, parseInt(month) - 1, 1);
+          to = new Date(yr, parseInt(month), 0);
+        } else if (year) {
+          const yr = 2000 + parseInt(year);
+          from = new Date(yr, 0, 1);
+          to = new Date(yr, 11, 31);
+        } else {
+          const dates = allAttendance.map((r) => r.dateObj).filter(Boolean);
+          from = dates.length ? new Date(Math.min(...dates)) : new Date();
+          to = new Date();
+        }
+        if (to > today) to = new Date(today);
+        const wdays = workingDaysBetween(from, to);
+        const wdaySet = new Set(wdays);
+
+        // Filter attendance rows within range (by year/month select, ignoring emp filter)
+        let rows = [...allAttendance];
+        if (year) rows = rows.filter((r) => r.yy === year);
+        if (month) rows = rows.filter((r) => r.mm === month);
+        rows = rows.filter((r) => wdaySet.has(r.isoDate));
+
+        // Build per-employee summary
+        const summaryMap = {};
+        allUsers.forEach((u) => {
+          summaryMap[u.id] = {
+            name: u.name,
+            id: u.id,
+            present: 0,
+            halfday: 0,
+            absent: 0,
+            lateSec: 0,
+          };
+        });
+        rows.forEach((r) => {
+          if (!summaryMap[r.empId]) {
+            summaryMap[r.empId] = {
+              name: r.empName,
+              id: r.empId,
+              present: 0,
+              halfday: 0,
+              absent: 0,
+              lateSec: 0,
+            };
+          }
+          const s = summaryMap[r.empId];
+          if (r.status === "P") s.present++;
+          else if (r.status === "HD") s.halfday++;
+          s.lateSec += r.lateSec;
+        });
+
+        // Absent = working days - (present+halfday marked) per employee
+        Object.values(summaryMap).forEach((s) => {
+          const marked = s.present + s.halfday;
+          s.absent = Math.max(0, wdays.length - marked);
+        });
+
+        lastSummaryList = Object.values(summaryMap).filter((s) => s.name);
+
+        document.getElementById("row-count").textContent =
+          `${lastSummaryList.length} employee(s)`;
+
+        if (!lastSummaryList.length) {
+          const container = document.getElementById("emp-cards-list");
+          container.classList.remove("summary-mode");
+          container.innerHTML =
+            '<div class="empty-state"><div class="empty-icon">🔍</div><p>No data found.</p></div>';
+          return;
+        }
+
+        renderSummaryTable();
+      }
+
       function applyFilters() {
+        if (isSummaryMode()) {
+          renderSummaryView();
+          return;
+        }
+
+        document.getElementById("stats-row").style.display = "";
+        document.getElementById("section-title").textContent = "Attendance Log";
+        document
+          .getElementById("emp-cards-list")
+          .classList.remove("summary-mode");
+
         const emp = document.getElementById("emp-filter").value;
         const year = document.getElementById("year-filter").value;
         const month = document.getElementById("month-filter").value;
@@ -1200,22 +1524,53 @@
           .join("");
       }
 
+      function updateSummaryModeUI() {
+        const on = isSummaryMode();
+        document.getElementById("emp-filter-group").style.display = on
+          ? "none"
+          : "";
+        document.getElementById("date-filter-group").style.display = on
+          ? "none"
+          : "";
+        if (on) {
+          const yearSel = document.getElementById("year-filter");
+          const monthSel = document.getElementById("month-filter");
+          if (!yearSel.value) {
+            const t = new Date();
+            const curYY = String(t.getFullYear()).slice(-2);
+            if ([...yearSel.options].some((o) => o.value === curYY))
+              yearSel.value = curYY;
+          }
+          if (!monthSel.value) {
+            const t = new Date();
+            monthSel.value = pad(t.getMonth() + 1);
+          }
+        }
+        applyFilters();
+      }
+
       ["emp-filter", "year-filter", "month-filter", "date-filter"].forEach(
         (id) => {
           document.getElementById(id).addEventListener("change", applyFilters);
         },
       );
+      document
+        .getElementById("summary-toggle")
+        .addEventListener("change", updateSummaryModeUI);
       document.getElementById("clear-btn").addEventListener("click", () => {
-        ["emp-filter", "year-filter", "month-filter", "date-filter"].forEach(
+        ["emp-filter", "date-filter"].forEach(
           (id) => (document.getElementById(id).value = ""),
         );
+        if (!isSummaryMode()) {
+          document.getElementById("year-filter").value = "";
+          document.getElementById("month-filter").value = "";
+        }
         applyFilters();
       });
       document
         .getElementById("refresh-btn")
         .addEventListener("click", loadData);
 
-      // const hbg = document.getElementById("hamburger");
       const sb = document.getElementById("sidebar");
       const ov = document.getElementById("sidebar-overlay");
 
